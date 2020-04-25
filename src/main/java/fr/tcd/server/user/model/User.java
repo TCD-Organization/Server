@@ -14,7 +14,6 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class User {
-
     @Id
     private String uuid;
 
@@ -25,7 +24,6 @@ public class User {
     @Field(value = "Password")
     private String password;
 
-    @Indexed(unique = true)
     @Field(value = "Email")
     private String email;
 

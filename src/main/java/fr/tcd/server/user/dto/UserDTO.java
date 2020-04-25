@@ -4,20 +4,15 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Data
 public class UserDTO {
-    @NotNull
-    @NotEmpty
+    @NotEmpty(message = "username must not be empty")
     private String username;
 
-    @NotNull
-    @NotEmpty
+    @NotEmpty(message = "password must not be empty")
     private String password;
 
-    @NotNull
-    @NotEmpty
     @Email
     private String email;
 }

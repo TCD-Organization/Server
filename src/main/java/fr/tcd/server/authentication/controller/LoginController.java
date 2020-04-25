@@ -18,11 +18,16 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
 @RequestMapping("/login")
-public class AuthenticationController {
+public class LoginController {
 
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManager;
-    private final UserService userService;
+
+    public LoginController(TokenProvider tokenProvider,
+                           AuthenticationManagerBuilder authenticationManager, UserService userService) {
+        this.tokenProvider = tokenProvider;
+        this.authenticationManager = authenticationManager;
+    }
 
     @PostMapping
     public ResponseEntity login(@RequestBody LoginDTO loginDTO) {
@@ -38,12 +43,4 @@ public class AuthenticationController {
     }
 
         // ============== NON-API ==============
-
-    public AuthenticationController(TokenProvider tokenProvider,
-                                    AuthenticationManagerBuilder authenticationManager, UserService userService) {
-        this.tokenProvider = tokenProvider;
-        this.authenticationManager = authenticationManager;
-        this.userService = userService;
-    }
-
 }
