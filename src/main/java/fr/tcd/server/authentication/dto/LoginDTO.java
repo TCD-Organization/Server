@@ -3,16 +3,13 @@ package fr.tcd.server.authentication.dto;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Data
 public class LoginDTO {
 
-    @NotNull
-    @NotEmpty
+    @NotEmpty(message = "username must not be empty")
     private String username;
 
-    @NotNull
-    @NotEmpty
+    @NotEmpty(message = "password must not be empty")
     private String password;
 }

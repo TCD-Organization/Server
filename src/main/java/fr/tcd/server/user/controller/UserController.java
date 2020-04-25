@@ -24,12 +24,8 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity register(@Valid @RequestBody UserDTO userDTO) {
-        System.out.println(userDTO.getUsername());
-        System.out.println(userDTO.getPassword());
         User createdUser = userService.registerNewUserAccount(userDTO);
         if(createdUser != null) {
-            System.out.println(createdUser.getUsername());
-            System.out.println(createdUser.getPassword());
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
 
