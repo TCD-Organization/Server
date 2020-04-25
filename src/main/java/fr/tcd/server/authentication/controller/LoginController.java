@@ -1,8 +1,7 @@
 package fr.tcd.server.authentication.controller;
 
 import fr.tcd.server.authentication.dto.LoginDTO;
-import fr.tcd.server.security.TokenProvider;
-import fr.tcd.server.user.service.UserService;
+import fr.tcd.server.security.utils.TokenProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,7 @@ public class LoginController {
     private final AuthenticationManagerBuilder authenticationManager;
 
     public LoginController(TokenProvider tokenProvider,
-                           AuthenticationManagerBuilder authenticationManager, UserService userService) {
+                           AuthenticationManagerBuilder authenticationManager) {
         this.tokenProvider = tokenProvider;
         this.authenticationManager = authenticationManager;
     }

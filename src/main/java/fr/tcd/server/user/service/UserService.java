@@ -1,9 +1,9 @@
 package fr.tcd.server.user.service;
 
-import fr.tcd.server.user.dto.UserDTO;
+import fr.tcd.server.exceptions.UserAlreadyExistsException;
 import fr.tcd.server.user.dao.UserRepository;
+import fr.tcd.server.user.dto.UserDTO;
 import fr.tcd.server.user.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +12,19 @@ import java.util.List;
 @Service
 public class UserService extends IUserService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserRepository userRepository;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
-    public User registerNewUserAccount(UserDTO userDTO) /*throws EmailExistsException*/ {
-        /*if (emailExist(userDTO.getEmail())) {
-            throw new EmailExistsException(
-                    "There is an user with that email adress:" + userDTO.getEmail());
-        }*/
+    public User registerNewUserAccount(UserDTO userDTO) throws UserAlreadyExistsException {
+        if (usernameAlreadyExists(userDTO.getUsername())) {
+            throw new UserAlreadyExistsException("A user with that username already exists");
+        }
         User user = new User()
                 .setUsername(userDTO.getUsername())
                 .setPassword(passwordEncoder.encode(userDTO.getPassword()))
@@ -32,4 +33,16 @@ public class UserService extends IUserService {
 
         return userRepository.save(user);
     }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    boolean usernameAlreadyExists(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+
 }
