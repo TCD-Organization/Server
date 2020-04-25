@@ -1,6 +1,6 @@
 package fr.tcd.server.security.filter;
 
-import fr.tcd.server.security.TokenProvider;
+import fr.tcd.server.security.utils.TokenProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;

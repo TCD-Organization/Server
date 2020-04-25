@@ -1,4 +1,4 @@
-package fr.tcd.server.security;
+package fr.tcd.server.security.utils;
 
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +63,8 @@ public class TokenProvider {
             return true;
 
         } catch (JwtException | IllegalArgumentException e) {
-            log.info("Invalid JWT token.");
+                System.out.println("Invalid JWT token.");
+
             return false;
         }
     }

@@ -1,9 +1,10 @@
 package fr.tcd.server.user.service;
 
-import fr.tcd.server.user.dto.UserDTO;
 import fr.tcd.server.user.dao.UserRepository;
+import fr.tcd.server.user.dto.UserDTO;
 import fr.tcd.server.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +13,13 @@ import java.util.List;
 @Service
 public class UserService extends IUserService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserRepository userRepository;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public User registerNewUserAccount(UserDTO userDTO) /*throws EmailExistsException*/ {
@@ -31,5 +34,10 @@ public class UserService extends IUserService {
                 .setRoles(List.of("USER"));
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }
