@@ -8,5 +8,5 @@ RUN mvn package
 
 EXPOSE 9000
 
-ENTRYPOINT ["java", "-jar", "/jee-server/target/server-last.jar"]
+ENTRYPOINT ["java", "-jar", "/jee-server/target/server.jar"]
 
