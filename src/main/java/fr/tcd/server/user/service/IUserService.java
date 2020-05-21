@@ -1,6 +1,6 @@
 package fr.tcd.server.user.service;
 
-import fr.tcd.server.exceptions.UserAlreadyExistsException;
+import fr.tcd.server.user.exception.UserAlreadyExistsException;
 import fr.tcd.server.user.dto.UserDTO;
 import fr.tcd.server.user.model.User;
 
