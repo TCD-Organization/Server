@@ -1,4 +1,4 @@
-package fr.tcd.server.authentication.dto;
+package fr.tcd.server.login.dto;
 
 import lombok.Data;
 

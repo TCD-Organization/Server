@@ -1,9 +1,9 @@
 package fr.tcd.server.user.service;
 
-import fr.tcd.server.exceptions.UserAlreadyExistsException;
+import fr.tcd.server.user.exception.UserAlreadyExistsException;
 import fr.tcd.server.user.dao.UserRepository;
 import fr.tcd.server.user.dto.UserDTO;
-import fr.tcd.server.user.model.User;
+import fr.tcd.server.user.model.UserModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +21,11 @@ public class UserService extends IUserService {
     }
 
     @Override
-    public User registerNewUserAccount(UserDTO userDTO) throws UserAlreadyExistsException {
+    public UserModel registerNewUserAccount(UserDTO userDTO) throws UserAlreadyExistsException {
         if (usernameAlreadyExists(userDTO.getUsername())) {
             throw new UserAlreadyExistsException("A user with that username already exists");
         }
-        User user = new User()
+        UserModel user = new UserModel()
                 .setUsername(userDTO.getUsername())
                 .setPassword(passwordEncoder.encode(userDTO.getPassword()))
                 .setEmail(userDTO.getEmail())
@@ -35,7 +35,7 @@ public class UserService extends IUserService {
     }
 
     @Override
-    public User findByUsername(String username) {
+    public UserModel findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 

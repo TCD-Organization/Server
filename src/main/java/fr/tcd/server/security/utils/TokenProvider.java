@@ -1,7 +1,9 @@
 package fr.tcd.server.security.utils;
 
+import fr.tcd.server.user.service.UserService;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,14 +22,19 @@ import java.util.stream.Collectors;
 @Component
 public class TokenProvider {
 
+    private final UserService userService;
+
+
     private static final String AUTHORITIES_KEY = "auth";
     private final long tokenValidityInMilliseconds = Duration.ofMinutes(5).getSeconds() * 1000;
     private final byte[] secret;
 
-    public TokenProvider(@Value("${security.token.secret}") CharSequence secret) {
+    public TokenProvider(@Value("${security.token.secret}") CharSequence secret, UserService userService) {
         this.secret = secret.toString().getBytes();
+        this.userService = userService;
     }
 
+    // Generates a token when login route is called
     public String createToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
@@ -39,13 +46,15 @@ public class TokenProvider {
         return Jwts.builder()
             .setSubject(authentication.getName())
             .claim(AUTHORITIES_KEY, authorities)
+            .claim("id", /*TODO: UserService.findByUsername().getId()*/authentication.getName())
             .signWith(SignatureAlgorithm.HS512, secret)
             .setExpiration(validity)
             .compact();
     }
 
+    // Generates Spring Security Authentication token when filtering requests
     public Authentication getAuthentication(String token) {
-        Claims claims = parseToken(token).getBody();
+        Claims claims = decodeToken(token).getBody();
 
         Collection<? extends GrantedAuthority> authorities =
             Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
@@ -59,7 +68,7 @@ public class TokenProvider {
 
     public boolean validateToken(String authToken) {
         try {
-            parseToken(authToken);
+            decodeToken(authToken);
             return true;
 
         } catch (JwtException | IllegalArgumentException e) {
@@ -69,7 +78,7 @@ public class TokenProvider {
         }
     }
 
-    private Jws<Claims> parseToken(String authToken) {
+    private Jws<Claims> decodeToken(String authToken) {
         return Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(authToken);

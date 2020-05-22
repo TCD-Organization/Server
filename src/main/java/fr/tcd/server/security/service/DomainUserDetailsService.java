@@ -1,8 +1,7 @@
 package fr.tcd.server.security.service;
 
-import fr.tcd.server.user.model.User;
+import fr.tcd.server.user.model.UserModel;
 import fr.tcd.server.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,9 +19,9 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findByUsername(username);
+        UserModel user = userService.findByUsername(username);
         if(user == null) {
-            throw new UsernameNotFoundException("User " + username + " not found");
+            throw new UsernameNotFoundException("UserModel " + username + " not found");
         }
 
         UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(username);
