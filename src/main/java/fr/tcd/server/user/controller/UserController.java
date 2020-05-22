@@ -1,7 +1,7 @@
 package fr.tcd.server.user.controller;
 
 import fr.tcd.server.user.dto.UserDTO;
-import fr.tcd.server.user.model.User;
+import fr.tcd.server.user.model.UserModel;
 import fr.tcd.server.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity register(@Valid @RequestBody UserDTO userDTO) {
-        User createdUser = userService.registerNewUserAccount(userDTO);
+        UserModel createdUser = userService.registerNewUserAccount(userDTO);
         if(createdUser != null) {
             return new ResponseEntity<>(HttpStatus.CREATED);
         }

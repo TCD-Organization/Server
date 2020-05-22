@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
@@ -14,13 +15,16 @@ import java.util.List;
 @Accessors(chain = true)
 public class DocumentModel {
     @Id
-    private String uuid;
+    private String id;
     private String name;
     private String checksum;
+    private String genre;
     private String content;
     private Double size;
     private List<AnalysisModel> analyses;
-    private String user_id;
+
+    @Field("user_id")
+    private String userId;
 
     /*
     public DocumentDTO toDTO() {

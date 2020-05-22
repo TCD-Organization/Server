@@ -5,5 +5,5 @@ import fr.tcd.server.document.exception.DocumentAlreadyExistsException;
 import fr.tcd.server.document.model.DocumentModel;
 
 public abstract class IDocumentService {
-    abstract DocumentModel processNewTask(DocumentDTO documentDTO) throws DocumentAlreadyExistsException;
+    abstract DocumentModel createDocument(DocumentDTO documentDTO) throws DocumentAlreadyExistsException;
 }
