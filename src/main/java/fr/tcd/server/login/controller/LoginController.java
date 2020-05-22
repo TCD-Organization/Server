@@ -1,6 +1,6 @@
-package fr.tcd.server.authentication.controller;
+package fr.tcd.server.login.controller;
 
-import fr.tcd.server.authentication.dto.LoginDTO;
+import fr.tcd.server.login.dto.LoginDTO;
 import fr.tcd.server.security.utils.TokenProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
