@@ -10,12 +10,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
-@Document(collection="User")
+@Document(collection="UserModel")
 @Data
 @Accessors(chain = true)
-public class User {
+public class UserModel {
     @Id
-    private String uuid;
+    private String id;
 
     @Indexed(unique = true)
     @Field(value = "Username")

@@ -13,7 +13,7 @@ import java.util.Date;
 @Accessors(chain = true)
 public class AnalysisModel {
     @Id
-    private String uuid;
+    private String id;
     private String name;
     private String type; // ObjectID of Analysis_Type
     private AnalysisStatus status;
