@@ -8,5 +8,5 @@ RUN mvn package
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/jee-server/target/server.jar"]
+ENTRYPOINT ["java", "-jar", "/jee-server/target/server-last.jar"]
 

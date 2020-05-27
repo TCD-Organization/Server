@@ -10,7 +10,7 @@
     </parent>
     <groupId>fr.tcd</groupId>
     <artifactId>server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>last</version>
     <name>server</name>
     <description>School annual project for Spring Boot</description>
 
