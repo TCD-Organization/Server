@@ -4,9 +4,9 @@ import fr.tcd.server.user.dto.IUserDTO;
 import fr.tcd.server.user.exception.UserAlreadyExistsException;
 import fr.tcd.server.user.model.UserModel;
 
-public abstract class IUserService {
-    abstract UserModel registerNewUser(IUserDTO accountDTO) throws UserAlreadyExistsException;
+import java.util.Optional;
 
-    abstract UserModel findByUsername(String username);
+public abstract class IUserService {
+    abstract Optional<UserModel> registerNewUser(IUserDTO accountDTO) throws UserAlreadyExistsException;
     abstract boolean usernameAlreadyExists(String username);
 }

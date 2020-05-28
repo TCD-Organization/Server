@@ -1,5 +1,6 @@
 package fr.tcd.server.security.service;
 
+import fr.tcd.server.user.dao.UserRepository;
 import fr.tcd.server.user.model.UserModel;
 import fr.tcd.server.user.service.UserService;
 import org.springframework.security.core.userdetails.User;
@@ -12,15 +13,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class DomainUserDetailsService implements UserDetailsService {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
 
-    public DomainUserDetailsService(UserService userService) {
-        this.userService = userService;
+    public DomainUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserModel user = userService.findByUsername(username);
+        UserModel user = userRepository.findByUsername(username);
         if(user == null) {
             throw new UsernameNotFoundException("UserModel " + username + " not found");
         }

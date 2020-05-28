@@ -1,6 +1,7 @@
 package fr.tcd.server.runner.controller;
 
 import fr.tcd.server.runner.dto.RunnerDTO;
+import fr.tcd.server.runner.exception.RunnerNotCreatedException;
 import fr.tcd.server.runner.model.RunnerModel;
 import fr.tcd.server.runner.service.RunnerService;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/runner")
@@ -24,12 +26,12 @@ public class RunnerController {
 
     @PostMapping
     public ResponseEntity registerRunner(@Valid @RequestBody RunnerDTO runnerDTO) {
-        RunnerModel newRunner = runnerService.registerNewRunner(runnerDTO);
-        if(newRunner != null) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
+        Optional<RunnerModel> newRunner = runnerService.registerNewRunner(runnerDTO);
+        if(newRunner.isEmpty()) {
+            throw new RunnerNotCreatedException("Runner not registered");
         }
 
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     // ============== NON-API ==============
