@@ -7,6 +7,8 @@ import fr.tcd.server.runner.model.RunnerModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class RunnerService extends IRunnerService {
 
@@ -19,13 +21,13 @@ public class RunnerService extends IRunnerService {
     }
 
     @Override
-    public RunnerModel registerNewRunner(RunnerDTO runnerDTO) throws RunnerAlreadyExistsException {
+    public Optional<RunnerModel> registerNewRunner(RunnerDTO runnerDTO) throws RunnerAlreadyExistsException {
         if (runnerAlreadyExists(runnerDTO.getRunnername())) {
             throw new RunnerAlreadyExistsException("A runner with that token already exists");
         }
         RunnerModel runner = runnerDTO.toRunnerModel(passwordEncoder);
 
-        return runnerRepository.save(runner);
+        return Optional.ofNullable(runnerRepository.save(runner));
     }
 
     @Override

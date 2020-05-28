@@ -7,6 +7,8 @@ import fr.tcd.server.user.model.UserModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService extends IUserService {
 
@@ -19,18 +21,13 @@ public class UserService extends IUserService {
     }
 
     @Override
-    public UserModel registerNewUser(IUserDTO userDTO) throws UserAlreadyExistsException {
+    public Optional<UserModel> registerNewUser(IUserDTO userDTO) throws UserAlreadyExistsException {
         if (usernameAlreadyExists(userDTO.getUsername())) {
             throw new UserAlreadyExistsException("A user with that username already exists");
         }
         UserModel user = userDTO.toUserModel(passwordEncoder);
 
-        return userRepository.save(user);
-    }
-
-    @Override
-    public UserModel findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return Optional.ofNullable(userRepository.save(user));
     }
 
     @Override

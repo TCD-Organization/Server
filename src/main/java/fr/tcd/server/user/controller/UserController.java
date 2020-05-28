@@ -2,6 +2,7 @@ package fr.tcd.server.user.controller;
 
 import fr.tcd.server.user.dto.AdminDTO;
 import fr.tcd.server.user.dto.UserDTO;
+import fr.tcd.server.user.exception.UserNotCreatedException;
 import fr.tcd.server.user.model.UserModel;
 import fr.tcd.server.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/register")
@@ -25,24 +27,24 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity registerUser(@Valid @RequestBody UserDTO userDTO) {
-        UserModel createdUser = userService.registerNewUser(userDTO);
-        if(createdUser != null) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
+        Optional<UserModel> createdUser = userService.registerNewUser(userDTO);
+        if(createdUser.isEmpty()) {
+            throw new UserNotCreatedException("User not Created");
         }
 
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     // No template (genericity) because we have to manage rights for this specific route
     // Edit: Also, we can't (ambiguous mapping not allowed)
     @PostMapping("/admin")
     public ResponseEntity registerAdmin(@Valid @RequestBody AdminDTO AdminDTO) {
-        UserModel createdAdmin = userService.registerNewUser(AdminDTO);
-        if(createdAdmin != null) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
+        Optional<UserModel> createdAdmin = userService.registerNewUser(AdminDTO);
+        if(createdAdmin.isEmpty()) {
+            throw new UserNotCreatedException("User not Created");
         }
 
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     // ============== NON-API ==============
