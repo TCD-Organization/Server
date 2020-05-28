@@ -30,14 +30,15 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+            .authenticationProvider(authProvider())
             .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
             .csrf().disable()
             .authorizeRequests()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/newTask").permitAll()
-
+                .antMatchers("/login", "/login/**", "/register").permitAll()
+                .antMatchers("/register/admin").permitAll()
+                .antMatchers("/runner").hasRole("ADMIN")
                 .antMatchers("/api/**").hasRole("USER")
                 .antMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest()
