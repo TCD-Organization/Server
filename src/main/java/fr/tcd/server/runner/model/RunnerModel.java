@@ -1,5 +1,6 @@
-package fr.tcd.server.user.model;
+package fr.tcd.server.runner.model;
 
+import fr.tcd.server.runner.dto.RunnerDTO;
 import fr.tcd.server.user.dto.UserDTO;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -13,27 +14,24 @@ import java.util.List;
 @Document(collection="Users")
 @Data
 @Accessors(chain = true)
-public class UserModel {
+public class RunnerModel {
     @Id
     private String id;
 
     @Indexed(unique = true)
     @Field(value = "Username")
-    private String username;
+    private String runnername;
 
     @Field(value = "Password")
-    private String password;
+    private String key;
 
-    @Field(value = "Email")
-    private String email;
+    private final List<String> roles = List.of("RUNNER"); // TODO: Try to see if it cannot just be of string type
 
-    private List<String> roles;
 
-    public UserDTO toDTO() {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername(username);
-        userDTO.setPassword(password);
-        userDTO.setEmail(email);
-        return userDTO;
+    public RunnerDTO toDTO() {
+        RunnerDTO runnerDTO = new RunnerDTO();
+        runnerDTO.setRunnername(runnername);
+        runnerDTO.setKey(key);
+        return runnerDTO;
     }
 }

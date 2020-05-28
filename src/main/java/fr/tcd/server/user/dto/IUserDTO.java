@@ -1,20 +1,28 @@
 package fr.tcd.server.user.dto;
 
 import fr.tcd.server.user.model.UserModel;
+import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
-public interface IUserDTO {
+@Data
+public abstract class IUserDTO {
     @NotEmpty(message = "username must not be empty")
-    String username = null;
+    private String username;
 
     @NotEmpty(message = "password must not be empty")
-    String password = null;
+    private String password;
 
     @Email
-    String email = null;
+    private String email;
 
-    UserModel toUserModel(PasswordEncoder passwordEncoder);
-}
+    public UserModel toUserModel(PasswordEncoder passwordEncoder) {
+        return new UserModel()
+                .setUsername(this.getUsername())
+                .setPassword(passwordEncoder.encode(this.getPassword()))
+                .setEmail(this.getEmail())
+                .setRoles(List.of("USER"));
+    }}

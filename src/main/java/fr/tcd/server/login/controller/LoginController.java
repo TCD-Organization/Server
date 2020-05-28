@@ -1,6 +1,7 @@
 package fr.tcd.server.login.controller;
 
 import fr.tcd.server.login.dto.LoginDTO;
+import fr.tcd.server.login.dto.LoginRunnerDTO;
 import fr.tcd.server.security.utils.TokenProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,17 +30,26 @@ public class LoginController {
     }
 
     @PostMapping
-    public ResponseEntity login(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity loginUser(@RequestBody LoginDTO loginDTO) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
+        return authenticate(authenticationToken);
+    }
 
+    @PostMapping("/runner")
+    public ResponseEntity loginRunner(@RequestBody LoginRunnerDTO loginRunnerDTO) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRunnerDTO.getRunnername(), loginRunnerDTO.getKey());
+        return authenticate(authenticationToken);
+    }
+
+
+
+    // ============== NON-API ==============
+
+    private ResponseEntity authenticate(UsernamePasswordAuthenticationToken authenticationToken) {
         Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
-
         String token = tokenProvider.createToken(authentication);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(AUTHORIZATION, "Bearer " + token);
-
         return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
     }
-
-        // ============== NON-API ==============
 }

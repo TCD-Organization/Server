@@ -34,6 +34,7 @@ public class UserController {
     }
 
     // No template (genericity) because we have to manage rights for this specific route
+    // Edit: Also, we can't (ambiguous mapping not allowed)
     @PostMapping("/admin")
     public ResponseEntity registerAdmin(@Valid @RequestBody AdminDTO AdminDTO) {
         UserModel createdAdmin = userService.registerNewUser(AdminDTO);
