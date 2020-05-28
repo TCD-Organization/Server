@@ -2,6 +2,7 @@ package fr.tcd.server.security.service;
 
 import fr.tcd.server.user.model.UserModel;
 import fr.tcd.server.user.service.UserService;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,4 +37,8 @@ public class DomainUserDetailsService implements UserDetailsService {
 
         return builder.build();
     }
+
+
+
+
 }

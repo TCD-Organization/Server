@@ -1,5 +1,6 @@
 package fr.tcd.server.user.controller;
 
+import fr.tcd.server.user.dto.AdminDTO;
 import fr.tcd.server.user.dto.UserDTO;
 import fr.tcd.server.user.model.UserModel;
 import fr.tcd.server.user.service.UserService;
@@ -23,9 +24,21 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity register(@Valid @RequestBody UserDTO userDTO) {
-        UserModel createdUser = userService.registerNewUserAccount(userDTO);
+    public ResponseEntity registerUser(@Valid @RequestBody UserDTO userDTO) {
+        UserModel createdUser = userService.registerNewUser(userDTO);
         if(createdUser != null) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // No template (genericity) because we have to manage rights for this specific route
+    // Edit: Also, we can't (ambiguous mapping not allowed)
+    @PostMapping("/admin")
+    public ResponseEntity registerAdmin(@Valid @RequestBody AdminDTO AdminDTO) {
+        UserModel createdAdmin = userService.registerNewUser(AdminDTO);
+        if(createdAdmin != null) {
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
 
