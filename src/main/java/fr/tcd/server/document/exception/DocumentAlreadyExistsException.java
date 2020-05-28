@@ -1,8 +1,6 @@
 package fr.tcd.server.document.exception;
 
 public final class DocumentAlreadyExistsException extends RuntimeException {
-    //private static final long serialVersionUID = 5861310537366287163L;
-
     public DocumentAlreadyExistsException() {
         super();
     }
