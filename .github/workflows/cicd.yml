@@ -1,0 +1,67 @@
+name: CI/CD with Maven and Docker
+
+on:
+  push:
+    paths-ignore:
+      - '.github/**'
+  pull_request:
+    paths-ignore:
+      - '.github/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository access
+        uses: actions/checkout@v2 # Check if the workflow can access our repo
+
+      - name: Set up Java 11 environment
+        uses: actions/setup-java@v1 # Sets up a Java environment
+        with:
+          java-version: 11
+
+      - name: Test with Maven
+        run: mvn test
+
+  build-dev:
+    needs: test
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    runs-on: self-hosted
+    steps:
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Build Docker image
+        run: docker build . --tag tcd-jee-server:dev
+
+  deploy-dev:
+    needs: build-dev
+    runs-on: self-hosted
+    steps:
+      - name: Stop previous Docker image
+        run:  (docker stop tcd-jee-server-dev || echo "Container already stopped") && (docker rm tcd-jee-server-dev || echo "Image already removed")
+
+      - name: Launch new Docker image
+        run: docker run -d -p 8080:8080 --name "tcd-jee-server-dev" tcd-jee-server:dev
+
+
+  build-prod:
+    needs: test
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    runs-on: self-hosted
+    steps:
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Build Docker image
+        run: docker build . --tag tcd-jee-server:prod
+
+  deploy-prod:
+    needs: build-prod
+    runs-on: self-hosted
+    steps:
+      - name: Stop previous Docker image
+        run:  (docker stop tcd-jee-server-prod || echo "Container already stopped") && (docker rm tcd-jee-server-prod || echo "Image already removed")
+
+      - name: Launch new Docker image
+        run: docker run -d -p 8080:8080 --name "tcd-jee-server-prod" tcd-jee-server:prod
