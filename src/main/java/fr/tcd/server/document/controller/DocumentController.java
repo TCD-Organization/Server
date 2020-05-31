@@ -1,6 +1,7 @@
 package fr.tcd.server.document.controller;
 
 import fr.tcd.server.document.dto.DocumentDTO;
+import fr.tcd.server.document.exception.DocumentNotCreatedException;
 import fr.tcd.server.document.model.DocumentModel;
 import fr.tcd.server.document.service.DocumentService;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/document")
@@ -26,14 +28,14 @@ public class DocumentController {
                                          @RequestParam(required = false, name = "file") MultipartFile file) {
 
         //TODO: Do a Switch on Type of data between file or link and process
-        //TODO: DocumentService.createDocument(documentDTO);
         //TODO: Get the user id from the authorization and add it to the created Document
-        /*DocumentModel newDocumentModelId = createDocument(documentDTO);
-        if(newDocumentModelId != null) {
-            return new ResponseEntity<>(newDocumentModelId, HttpStatus.CREATED);
+
+        Optional<DocumentModel> newDocument = documentService.createDocument(documentDTO);
+        if(newDocument.isEmpty()) {
+            throw new DocumentNotCreatedException("Document not created");
         }
-        */
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<>(newDocument.get().getId(), HttpStatus.CREATED);
     }
 
     // ============== NON-API ==============

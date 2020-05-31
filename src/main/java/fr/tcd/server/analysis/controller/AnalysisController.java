@@ -20,12 +20,13 @@ public class AnalysisController {
     }
 
     @PostMapping
-    public ResponseEntity newAnalysis(@PathVariable("docID") String docID, @Valid @RequestBody AnalysisDTO analysisDTO) {
-        String AnalysisId = analysisService.processNewAnalysis(Long.valueOf(docID), analysisDTO);
-        if (AnalysisId.isEmpty()) {
+    public ResponseEntity createAnalysis(@PathVariable("docID") String docID, @Valid @RequestBody AnalysisDTO analysisDTO) {
+        String newAnalysisId = analysisService.processNewAnalysis(docID, analysisDTO);
+        if (newAnalysisId.isEmpty()) {
             throw new AnalysisNotCreatedException("Analysis not created");
         }
-        return new ResponseEntity<>(AnalysisId, HttpStatus.CREATED);
+
+        return new ResponseEntity<>(newAnalysisId, HttpStatus.CREATED);
     }
 
 
