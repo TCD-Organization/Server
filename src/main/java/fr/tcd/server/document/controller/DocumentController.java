@@ -35,7 +35,7 @@ public class DocumentController {
             throw new DocumentNotCreatedException("Document not created");
         }
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(newDocument.get().getId(), HttpStatus.CREATED);
     }
 
     // ============== NON-API ==============
