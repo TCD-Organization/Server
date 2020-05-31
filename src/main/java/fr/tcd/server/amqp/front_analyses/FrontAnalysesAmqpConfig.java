@@ -4,6 +4,8 @@ import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static fr.tcd.server.amqp.AmqpConfig.EXCHANGE;
+
 @Configuration
 public class FrontAnalysesAmqpConfig {
     private static final String QUEUE = "all_front_analyses_q";
