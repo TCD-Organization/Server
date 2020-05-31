@@ -5,17 +5,19 @@ services:
     image: 'rabbitmq:3.6-management-alpine'
     network_mode: 'host'
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "${RABBITMQ_MANAGEMENT_PORT:-5672}:5672"
+      - "${RABBITMQ_BROKER_PORT:-15672}:15672"
   jee-server:
     build: .
     ports:
-    - "8080:8080"
+    - "${JEE_SERVER_PORT:-8080}:8080"
     environment:
-      - AUTHENTICATION_DATABASE=${TCD_AUTHENTICATION_DATABASE}
+      - DB_AUTHENTICATION_DATABASE=${TCD_AUTHENTICATION_DATABASE}
       - DB_USERNAME=${TCD_DB_USERNAME}
       - DB_PASSWORD=${TCD_DB_PASSWORD}
       - DB_NAME=${TCD_DB_NAME}
       - DB_PORT=${TCD_DB_PORT}
       - DB_HOST=${TCD_DB_HOST}
+      - BROKER_HOST=${TCD_BROKER_HOST}
+      - BROKER_PORT=${TCD_BROKER_PORT}
     restart: always
