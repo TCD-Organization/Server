@@ -30,7 +30,6 @@ services:
     hostname: 'tcdrabbit'
     image: 'rabbitmq:3.6-management-alpine'
     container_name: 'tcd-rabbitmq'
-    network_mode: 'host'
     ports:
       - "${TCD_RABBITMQ_MANAGEMENT_PORT:-5672}:5672"
       - "${TCD_RABBITMQ_BROKER_PORT:-15672}:15672"

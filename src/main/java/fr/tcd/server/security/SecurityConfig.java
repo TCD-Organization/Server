@@ -1,7 +1,5 @@
 package fr.tcd.server.security;
 
-import fr.tcd.server.security.filter.JWTFilter;
-import fr.tcd.server.security.service.DomainUserDetailsService;
 import fr.tcd.server.security.utils.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

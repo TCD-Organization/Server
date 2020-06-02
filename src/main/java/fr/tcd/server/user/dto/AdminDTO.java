@@ -1,6 +1,6 @@
 package fr.tcd.server.user.dto;
 
-import fr.tcd.server.user.model.UserModel;
+import fr.tcd.server.user.UserModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
