@@ -28,7 +28,7 @@ public class TokenProvider {
     private final long tokenValidityInMilliseconds = Duration.ofMinutes(5).getSeconds() * 1000;
     private final byte[] secret;
 
-    public TokenProvider(@Value("${security.token.secret:default}") CharSequence secret, UserService userService) {
+    public TokenProvider(@Value("${JEE_SECURITY_TOKEN_SECRET:default}") CharSequence secret, UserService userService) {
         this.secret = secret.toString().getBytes();
         this.userService = userService;
     }
