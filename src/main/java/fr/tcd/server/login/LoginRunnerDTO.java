@@ -12,4 +12,7 @@ public class LoginRunnerDTO {
 
     @NotEmpty(message = "key must not be empty")
     private String key;
+
+    @NotEmpty(message = "port must not be empty")
+    private int port;
 }

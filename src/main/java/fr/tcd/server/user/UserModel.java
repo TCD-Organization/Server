@@ -18,13 +18,10 @@ public class UserModel {
     private String id;
 
     @Indexed(unique = true)
-    @Field(value = "Username")
     private String username;
 
-    @Field(value = "Password")
     private String password;
 
-    @Field(value = "Email")
     private String email;
 
     private List<String> roles;

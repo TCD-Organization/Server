@@ -36,7 +36,7 @@ public class LoginController {
     @PostMapping("/runner")
     public ResponseEntity loginRunner(@RequestBody LoginRunnerDTO loginRunnerDTO) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRunnerDTO.getRunnername(), loginRunnerDTO.getKey());
-        return authenticate(authenticationToken);
+        return authenticateRunner(authenticationToken, loginRunnerDTO.getPort());
     }
 
 
@@ -46,6 +46,14 @@ public class LoginController {
     private ResponseEntity authenticate(UsernamePasswordAuthenticationToken authenticationToken) {
         Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
         String token = tokenProvider.createToken(authentication);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(AUTHORIZATION, "Bearer " + token);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
+    }
+
+    private ResponseEntity authenticateRunner(UsernamePasswordAuthenticationToken authenticationToken, int port) {
+        Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
+        String token = tokenProvider.createRunnerToken(authentication, port);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(AUTHORIZATION, "Bearer " + token);
         return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
