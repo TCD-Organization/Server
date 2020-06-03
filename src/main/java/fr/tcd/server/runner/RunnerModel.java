@@ -7,9 +7,10 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
-@Document(collection="Users")
+@Document(collection="Runners")
 @Data
 @Accessors(chain = true)
 public class RunnerModel {
@@ -17,14 +18,13 @@ public class RunnerModel {
     private String id;
 
     @Indexed(unique = true)
-    @Field(value = "Username")
     private String runnername;
 
-    @Field(value = "Password")
     private String key;
 
-    private final List<String> roles = List.of("RUNNER"); // TODO: Try to see if it cannot just be of string type
+    private List<String> roles = List.of("RUNNER"); // TODO: Try to see if it cannot just be of string type
 
+    private boolean isUp;
 
     public RunnerDTO toDTO() {
         RunnerDTO runnerDTO = new RunnerDTO();

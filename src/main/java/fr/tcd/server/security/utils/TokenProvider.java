@@ -21,9 +21,7 @@ import java.util.stream.Collectors;
 @Component
 public class TokenProvider {
 
-    private final UserService userService;
-
-
+    private UserService userService;
     private static final String AUTHORITIES_KEY = "auth";
     private final long tokenValidityInMilliseconds = Duration.ofMinutes(5).getSeconds() * 1000;
     private final byte[] secret;
@@ -45,7 +43,6 @@ public class TokenProvider {
         return Jwts.builder()
             .setSubject(authentication.getName())
             .claim(AUTHORITIES_KEY, authorities)
-            .claim("id", /*TODO: UserService.findByUsername().getId()*/authentication.getName())
             .signWith(SignatureAlgorithm.HS512, secret)
             .setExpiration(validity)
             .compact();
