@@ -30,32 +30,26 @@ public class LoginController {
     @PostMapping
     public ResponseEntity loginUser(@RequestBody LoginDTO loginDTO) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
-        return authenticate(authenticationToken);
+        Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
+        String token = tokenProvider.createToken(authentication);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(AUTHORIZATION, "Bearer " + token);
+        return new ResponseEntity(httpHeaders, HttpStatus.OK);
     }
 
     @PostMapping("/runner")
     public ResponseEntity loginRunner(@RequestBody LoginRunnerDTO loginRunnerDTO) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRunnerDTO.getRunnername(), loginRunnerDTO.getKey());
-        return authenticateRunner(authenticationToken, loginRunnerDTO.getPort());
+        Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
+        String token = tokenProvider.createRunnerToken(authentication, port);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(AUTHORIZATION, "Bearer " + token);
+        return new ResponseEntity(httpHeaders, HttpStatus.OK);
     }
 
 
 
     // ============== NON-API ==============
 
-    private ResponseEntity authenticate(UsernamePasswordAuthenticationToken authenticationToken) {
-        Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
-        String token = tokenProvider.createToken(authentication);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(AUTHORIZATION, "Bearer " + token);
-        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
-    }
-
-    private ResponseEntity authenticateRunner(UsernamePasswordAuthenticationToken authenticationToken, int port) {
-        Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
-        String token = tokenProvider.createRunnerToken(authentication, port);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(AUTHORIZATION, "Bearer " + token);
-        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
-    }
 }

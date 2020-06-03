@@ -2,6 +2,8 @@ package fr.tcd.server.document;
 
 import fr.tcd.server.analysis.AnalysisModel;
 import fr.tcd.server.document.exception.DocumentAlreadyExistsException;
+import fr.tcd.server.user.UserModel;
+import fr.tcd.server.user.UserRepository;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +14,18 @@ import java.util.Optional;
 public class DocumentService {
 
     private final DocumentRepository documentRepository;
+    private final UserRepository userRepository;
 
-    public DocumentService(DocumentRepository documentRepository) {
+    public DocumentService(DocumentRepository documentRepository, UserRepository userRepository) {
         this.documentRepository = documentRepository;
+        this.userRepository = userRepository;
     }
 
-    public Optional<DocumentModel> createDocument(DocumentDTO documentDTO) throws DocumentAlreadyExistsException {
+    public Optional<DocumentModel> createDocument(DocumentDTO documentDTO, String username) throws DocumentAlreadyExistsException {
         //TODO: Get size
         //TODO: Get user_id Claims claims = tokenProvider.decodeToken(token).getBody();
+        UserModel user = userRepository.findByUsername(username);
+
         String hash = hashText(documentDTO.getContent());
 
         DocumentModel documentModel = new DocumentModel()
@@ -28,8 +34,8 @@ public class DocumentService {
                 .setGenre(documentDTO.getGenre())
                 .setContent(documentDTO.getContent())
                 //.setSize(size)
-                .setAnalyses(new ArrayList<AnalysisModel>());
-                //.setUser_id();
+                .setAnalyses(new ArrayList<AnalysisModel>())
+                .setUserId(user.getId());
 
         return Optional.ofNullable(documentRepository.save(documentModel));
     }
