@@ -1,5 +1,9 @@
-package fr.tcd.server.analysis.exception;
+package fr.tcd.server.runner_analysis.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Runner Analysis not sent")
 public final class RunnerAnalysisNotSentException extends RuntimeException {
     public RunnerAnalysisNotSentException() {
         super();

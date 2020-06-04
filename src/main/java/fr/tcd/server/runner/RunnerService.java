@@ -1,6 +1,7 @@
 package fr.tcd.server.runner;
 
 import fr.tcd.server.runner.exception.RunnerAlreadyExistsException;
+import fr.tcd.server.runner.exception.RunnerNotCreatedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +18,19 @@ public class RunnerService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Optional<RunnerModel> registerNewRunner(RunnerDTO runnerDTO) throws RunnerAlreadyExistsException {
+    public void registerNewRunner(RunnerDTO runnerDTO) throws RunnerAlreadyExistsException, RunnerNotCreatedException {
         if (runnerAlreadyExists(runnerDTO.getRunnername())) {
-            throw new RunnerAlreadyExistsException("A runner with that token already exists");
+            throw new RunnerAlreadyExistsException();
         }
         RunnerModel runner = runnerDTO.toRunnerModel(passwordEncoder);
 
-        return Optional.ofNullable(runnerRepository.save(runner));
+        runner = runnerRepository.save(runner);
+        if (runner == null) {
+            throw new RunnerNotCreatedException();
+        }
     }
 
-    boolean runnerAlreadyExists(String runnername) {
+    private boolean runnerAlreadyExists(String runnername) {
         return runnerRepository.existsByRunnername(runnername);
     }
 

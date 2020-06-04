@@ -3,7 +3,7 @@ package fr.tcd.server.runner_analysis;
 import fr.tcd.server.amqp.AmqpConfig;
 import fr.tcd.server.amqp.runner_analyses.RunnerAnalysis;
 import fr.tcd.server.analysis.AnalysisModel;
-import fr.tcd.server.analysis.exception.RunnerAnalysisNotSentException;
+import fr.tcd.server.runner_analysis.exception.RunnerAnalysisNotSentException;
 import fr.tcd.server.document.DocumentModel;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
