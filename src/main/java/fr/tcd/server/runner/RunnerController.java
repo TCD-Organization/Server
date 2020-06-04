@@ -20,11 +20,7 @@ public class RunnerController {
 
     @PostMapping
     public ResponseEntity registerRunner(@Valid @RequestBody RunnerDTO runnerDTO) {
-        Optional<RunnerModel> newRunner = runnerService.registerNewRunner(runnerDTO);
-        if(newRunner.isEmpty()) {
-            throw new RunnerNotCreatedException("Runner not registered");
-        }
-
+        runnerService.registerNewRunner(runnerDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

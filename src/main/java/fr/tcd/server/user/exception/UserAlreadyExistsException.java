@@ -1,5 +1,9 @@
 package fr.tcd.server.user.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(code = HttpStatus.CONFLICT, reason = "User Already Exists")
 public final class UserAlreadyExistsException extends RuntimeException {
     public UserAlreadyExistsException() {
         super();

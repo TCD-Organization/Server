@@ -42,7 +42,7 @@ public class LoginController {
     public ResponseEntity loginRunner(@RequestBody LoginRunnerDTO loginRunnerDTO) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRunnerDTO.getRunnername(), loginRunnerDTO.getKey());
         Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
-        String token = tokenProvider.createRunnerToken(authentication, port);
+        String token = tokenProvider.createRunnerToken(authentication, loginRunnerDTO.getPort());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(AUTHORIZATION, "Bearer " + token);
         return new ResponseEntity(httpHeaders, HttpStatus.OK);

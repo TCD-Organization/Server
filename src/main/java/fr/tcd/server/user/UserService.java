@@ -2,6 +2,7 @@ package fr.tcd.server.user;
 
 import fr.tcd.server.user.dto.IUserDTO;
 import fr.tcd.server.user.exception.UserAlreadyExistsException;
+import fr.tcd.server.user.exception.UserNotCreatedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,16 +19,19 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Optional<UserModel> registerNewUser(IUserDTO userDTO) throws UserAlreadyExistsException {
+    public void registerNewUser(IUserDTO userDTO) throws UserAlreadyExistsException, UserNotCreatedException {
         if (usernameAlreadyExists(userDTO.getUsername())) {
-            throw new UserAlreadyExistsException("A user with that username already exists");
+            throw new UserAlreadyExistsException();
         }
         UserModel user = userDTO.toUserModel(passwordEncoder);
 
-        return Optional.ofNullable(userRepository.save(user));
+        UserModel result = userRepository.save(user);
+        if (result == null){
+            throw new UserNotCreatedException();
+        }
     }
 
-    boolean usernameAlreadyExists(String username) {
+    private boolean usernameAlreadyExists(String username) {
         return userRepository.existsByUsername(username);
     }
 
