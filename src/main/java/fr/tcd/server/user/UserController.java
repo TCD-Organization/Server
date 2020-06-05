@@ -42,6 +42,6 @@ public class UserController {
 
     private ResponseEntity registerAccount(@Valid @RequestBody IUserDTO accountDTO) {
         userService.registerNewUser(accountDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 }
