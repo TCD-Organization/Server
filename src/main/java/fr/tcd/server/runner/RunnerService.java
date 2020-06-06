@@ -18,21 +18,17 @@ public class RunnerService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerNewRunner(RunnerDTO runnerDTO) throws RunnerAlreadyExistsException, RunnerNotCreatedException {
+    public RunnerModel registerNewRunner(RunnerDTO runnerDTO) {
         if (runnerAlreadyExists(runnerDTO.getRunnername())) {
             throw new RunnerAlreadyExistsException();
         }
+
         RunnerModel runner = runnerDTO.toRunnerModel(passwordEncoder);
 
-        runner = runnerRepository.save(runner);
-        if (runner == null) {
-            throw new RunnerNotCreatedException();
-        }
+        return Optional.of(runnerRepository.save(runner)).orElseThrow(RunnerNotCreatedException::new);
     }
 
     private boolean runnerAlreadyExists(String runnername) {
         return runnerRepository.existsByRunnername(runnername);
     }
-
-
 }

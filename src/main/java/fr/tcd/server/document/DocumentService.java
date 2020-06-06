@@ -2,8 +2,10 @@ package fr.tcd.server.document;
 
 import fr.tcd.server.analysis.AnalysisModel;
 import fr.tcd.server.document.exception.DocumentAlreadyExistsException;
+import fr.tcd.server.document.exception.DocumentNotCreatedException;
 import fr.tcd.server.user.UserModel;
 import fr.tcd.server.user.UserRepository;
+import fr.tcd.server.user.exception.UserNotFoundException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +23,10 @@ public class DocumentService {
         this.userRepository = userRepository;
     }
 
-    public Optional<DocumentModel> createDocument(DocumentDTO documentDTO, String username) throws DocumentAlreadyExistsException {
+    public DocumentModel createDocument(DocumentDTO documentDTO, String username) {
         //TODO: Get size
         //TODO: Get user_id Claims claims = tokenProvider.decodeToken(token).getBody();
-        UserModel user = userRepository.findByUsername(username);
+        UserModel user = Optional.ofNullable(userRepository.findByUsername(username)).orElseThrow(UserNotFoundException::new);
 
         String hash = hashText(documentDTO.getContent());
 
@@ -37,7 +39,7 @@ public class DocumentService {
                 .setAnalyses(new ArrayList<AnalysisModel>())
                 .setUserId(user.getId());
 
-        return Optional.ofNullable(documentRepository.save(documentModel));
+        return Optional.of(documentRepository.save(documentModel)).orElseThrow(DocumentNotCreatedException::new);
     }
 
     private String hashText(String text)  {

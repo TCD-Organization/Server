@@ -30,7 +30,7 @@ public class RunnerAnalysisService {
         try {
             rabbitTemplate.convertAndSend(AmqpConfig.EXCHANGE, NEW_RUNNER_ANALYSIS_ROOTING_KEY, runnerAnalysis);
         } catch (AmqpException e) {
-            throw new RunnerAnalysisNotSentException("Analysis not sent to Runners", e);
+            throw new RunnerAnalysisNotSentException();
         }
     }
 

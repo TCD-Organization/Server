@@ -22,17 +22,16 @@ public class DomainUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserModel user = userRepository.findByUsername(username);
-        if(user == null) {
-            RunnerModel runner = runnerRepository.findByRunnername(username);
-            if (runner == null) {
-                throw new UsernameNotFoundException("User" + username + " not found");
-            }
-
+    public UserDetails loadUserByUsername(String username) {
+        UserModel user;
+        RunnerModel runner;
+        if((user = userRepository.findByUsername(username)) != null) {
+            return buildUserDetails(username, user);
+        } else if((runner = runnerRepository.findByRunnername(username)) != null) {
             return buildRunnerDetails(username, runner);
+        } else {
+            throw new UsernameNotFoundException("User " + username + " not found");
         }
-        return buildUserDetails(username, user);
     }
 
     private UserDetails buildUserDetails(String username, UserModel user) {

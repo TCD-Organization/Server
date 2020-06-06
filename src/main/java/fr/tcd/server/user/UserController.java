@@ -3,18 +3,15 @@ package fr.tcd.server.user;
 import fr.tcd.server.user.dto.AdminDTO;
 import fr.tcd.server.user.dto.IUserDTO;
 import fr.tcd.server.user.dto.UserDTO;
-import fr.tcd.server.user.exception.UserAlreadyExistsException;
-import fr.tcd.server.user.exception.UserNotCreatedException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.util.Optional;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/register")
@@ -27,21 +24,22 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity registerUser(@Valid @RequestBody UserDTO userDTO) {
-        return registerAccount(userDTO);
+    public ResponseEntity<String> registerUser(@Valid @RequestBody UserDTO userDTO, UriComponentsBuilder uriBuilder) {
+        return registerAccount(userDTO, uriBuilder);
     }
 
     // No template (genericity) because we have to manage rights for this specific route
     // Edit: Also, we can't (ambiguous mapping not allowed)
     @PostMapping("/admin")
-    public ResponseEntity registerAdmin(@Valid @RequestBody AdminDTO adminDTO) {
-        return registerAccount(adminDTO);
+    public ResponseEntity<String> registerAdmin(@Valid @RequestBody AdminDTO adminDTO, UriComponentsBuilder uriBuilder) {
+        return registerAccount(adminDTO, uriBuilder);
     }
 
     // ============== NON-API ==============
 
-    private ResponseEntity registerAccount(@Valid @RequestBody IUserDTO accountDTO) {
-        userService.registerNewUser(accountDTO);
-        return new ResponseEntity(HttpStatus.CREATED);
+    private ResponseEntity<String> registerAccount(IUserDTO accountDTO, UriComponentsBuilder uriBuilder) {
+        String newUserId = userService.registerNewUser(accountDTO).getId();
+        URI location = uriBuilder.path("/user/{Id}").build(newUserId);
+        return ResponseEntity.created(location).build();
     }
 }
