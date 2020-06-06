@@ -24,14 +24,14 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> registerUser(@Valid @RequestBody UserDTO userDTO, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<String> registerUser(@Valid @RequestBody UserDTO userDTO, UriComponentsBuilder uriBuilder) {
         return registerAccount(userDTO, uriBuilder);
     }
 
     // No template (genericity) because we have to manage rights for this specific route
     // Edit: Also, we can't (ambiguous mapping not allowed)
     @PostMapping("/admin")
-    public ResponseEntity<Void> registerAdmin(@Valid @RequestBody AdminDTO adminDTO, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<String> registerAdmin(@Valid @RequestBody AdminDTO adminDTO, UriComponentsBuilder uriBuilder) {
         return registerAccount(adminDTO, uriBuilder);
     }
 
