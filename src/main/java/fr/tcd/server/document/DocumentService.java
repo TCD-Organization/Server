@@ -5,10 +5,12 @@ import fr.tcd.server.document.exception.DocumentAlreadyExistsException;
 import fr.tcd.server.document.exception.DocumentNotCreatedException;
 import fr.tcd.server.user.UserModel;
 import fr.tcd.server.user.UserRepository;
+import fr.tcd.server.user.exception.UserNotFoundException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class DocumentService {
@@ -21,11 +23,11 @@ public class DocumentService {
         this.userRepository = userRepository;
     }
 
-    public DocumentModel createDocument(DocumentDTO documentDTO, String username) throws DocumentAlreadyExistsException {
+    public DocumentModel createDocument(DocumentDTO documentDTO, String username) {
         //TODO: Get size
         //TODO: Get user_id Claims claims = tokenProvider.decodeToken(token).getBody();
-        UserModel user = userRepository.findByUsername(username);
-        
+        UserModel user = Optional.ofNullable(userRepository.findByUsername(username)).orElseThrow(UserNotFoundException::new);
+
         String hash = hashText(documentDTO.getContent());
 
         DocumentModel documentModel = new DocumentModel()
@@ -37,12 +39,7 @@ public class DocumentService {
                 .setAnalyses(new ArrayList<AnalysisModel>())
                 .setUserId(user.getId());
 
-        documentModel = documentRepository.save(documentModel);
-        if (documentModel == null) {
-            throw new DocumentNotCreatedException();
-        }
-
-        return documentModel;
+        return Optional.of(documentRepository.save(documentModel)).orElseThrow(DocumentNotCreatedException::new);
     }
 
     private String hashText(String text)  {

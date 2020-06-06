@@ -37,9 +37,9 @@ public class UserController {
 
     // ============== NON-API ==============
 
-    private ResponseEntity<Void> registerAccount(IUserDTO accountDTO, UriComponentsBuilder uriBuilder) {
-        UserModel newUser = userService.registerNewUser(accountDTO);
-        URI location = uriBuilder.path("/user/{Id}").build(newUser.getId());
+    private ResponseEntity<String> registerAccount(IUserDTO accountDTO, UriComponentsBuilder uriBuilder) {
+        String newUserId = userService.registerNewUser(accountDTO).getId();
+        URI location = uriBuilder.path("/user/{Id}").build(newUserId);
         return ResponseEntity.created(location).build();
     }
 }

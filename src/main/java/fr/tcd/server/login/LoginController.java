@@ -28,24 +28,25 @@ public class LoginController {
     }
 
     @PostMapping
-    public ResponseEntity loginUser(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<Void> loginUser(@RequestBody LoginDTO loginDTO) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
         Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
         String token = tokenProvider.createToken(authentication);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(AUTHORIZATION, "Bearer " + token);
-        return new ResponseEntity(httpHeaders, HttpStatus.OK);
+        return ResponseEntity.ok().headers(httpHeaders).build();
+
     }
 
     @PostMapping("/runner")
-    public ResponseEntity loginRunner(@RequestBody LoginRunnerDTO loginRunnerDTO) {
+    public ResponseEntity<Void> loginRunner(@RequestBody LoginRunnerDTO loginRunnerDTO) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRunnerDTO.getRunnername(), loginRunnerDTO.getKey());
         Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
         String token = tokenProvider.createRunnerToken(authentication, loginRunnerDTO.getPort());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(AUTHORIZATION, "Bearer " + token);
-        return new ResponseEntity(httpHeaders, HttpStatus.OK);
+        return ResponseEntity.ok().headers(httpHeaders).build();
     }
 
 

@@ -19,23 +19,16 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserModel registerNewUser(IUserDTO userDTO) throws UserAlreadyExistsException, UserNotCreatedException {
+    public UserModel registerNewUser(IUserDTO userDTO) {
         if (usernameAlreadyExists(userDTO.getUsername())) {
             throw new UserAlreadyExistsException();
         }
         UserModel userModel = userDTO.toUserModel(passwordEncoder);
 
-        UserModel newUser = userRepository.save(userModel);
-        if (newUser == null){
-            throw new UserNotCreatedException();
-        }
-
-        return newUser;
+        return Optional.of(userRepository.save(userModel)).orElseThrow(UserNotCreatedException::new);
     }
 
     private boolean usernameAlreadyExists(String username) {
         return userRepository.existsByUsername(username);
     }
-
-
 }

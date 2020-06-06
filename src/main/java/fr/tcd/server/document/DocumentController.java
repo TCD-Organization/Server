@@ -30,10 +30,10 @@ public class DocumentController {
                                                  Principal principal, UriComponentsBuilder uriBuilder) {
 
         //TODO: Do a Switch on Type of data between file or link and process
-        DocumentModel newDocument = documentService.createDocument(documentDTO, principal.getName());
-        URI location = uriBuilder.path("/document/{docId}").build(newDocument.getId());
+        String newDocumentId = documentService.createDocument(documentDTO, principal.getName()).getId();
+        URI location = uriBuilder.path("/document/{docId}").build(newDocumentId);
 
-        return ResponseEntity.created(location).body(newDocument.getId());
+        return ResponseEntity.created(location).body(newDocumentId);
     }
 
     // ============== NON-API ==============

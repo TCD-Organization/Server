@@ -21,7 +21,7 @@ public class RunnerAnalysisService {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void formAndSendRunnerAnalysis(DocumentModel document, AnalysisModel analysis) throws RunnerAnalysisNotSentException {
+    public void formAndSendRunnerAnalysis(DocumentModel document, AnalysisModel analysis) {
         RunnerAnalysis runnerAnalysis = new RunnerAnalysis()
                 .setId(document.getId())
                 .setGenre(document.getGenre())
