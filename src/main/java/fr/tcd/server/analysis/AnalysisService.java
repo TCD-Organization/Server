@@ -25,13 +25,13 @@ public class AnalysisService {
         this.runnerAnalysisService = runnerAnalysisService;
     }
 
-    String processNewAnalysis(String docID, AnalysisDTO analysisDTO) throws DocumentNotFoundException, DocumentNotUpdatedException, RunnerAnalysisNotSentException {
+    AnalysisModel processNewAnalysis(String docID, AnalysisDTO analysisDTO) throws DocumentNotFoundException, DocumentNotUpdatedException, AnalysisNotCreatedException,RunnerAnalysisNotSentException {
         //TODO: If there is any fail, roll back the creation
 
         DocumentModel document = documentRepository.findById(docID);
         //TODO: Check if the user is the owner of the document
         if(document == null) {
-            throw new DocumentNotFoundException("Document not found");
+            throw new DocumentNotFoundException();
         }
 
         AnalysisModel newAnalysis = createAnalysis(analysisDTO);
@@ -42,11 +42,11 @@ public class AnalysisService {
 
         DocumentModel newDocument = documentRepository.save(document);
         if(newDocument == null) {
-            throw new DocumentNotUpdatedException("Document not updated");
+            throw new DocumentNotUpdatedException();
         }
 
         runnerAnalysisService.formAndSendRunnerAnalysis(newDocument, newAnalysis);
-        return newAnalysis.getId();
+        return newAnalysis;
     }
 
     private AnalysisModel createAnalysis(AnalysisDTO analysisDTO) throws AnalysisNotCreatedException {

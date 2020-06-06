@@ -7,8 +7,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
@@ -22,18 +25,15 @@ public class DocumentController {
     }
 
     @PostMapping
-    public ResponseEntity createDocument(@Valid @RequestBody DocumentDTO documentDTO,
-                                         @RequestParam(required = false, name = "file") MultipartFile file) {
+    public ResponseEntity<String> createDocument(@Valid @RequestBody DocumentDTO documentDTO,
+                                         @RequestParam(required = false, name = "file") MultipartFile file,
+                                                 Principal principal, UriComponentsBuilder uriBuilder) {
 
         //TODO: Do a Switch on Type of data between file or link and process
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        DocumentModel newDocument = documentService.createDocument(documentDTO, principal.getName());
+        URI location = uriBuilder.path("/document/{docId}").build(newDocument.getId());
 
-        Optional<DocumentModel> newDocument = documentService.createDocument(documentDTO, ((UserDetails)principal).getUsername());
-        if(newDocument.isEmpty()) {
-            throw new DocumentNotCreatedException("Document not created");
-        }
-
-        return new ResponseEntity<>(newDocument.get().getId(), HttpStatus.CREATED);
+        return ResponseEntity.created(location).body(newDocument.getId());
     }
 
     // ============== NON-API ==============
