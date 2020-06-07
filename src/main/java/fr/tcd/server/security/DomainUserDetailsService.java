@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class DomainUserDetailsService implements UserDetailsService {
 
@@ -25,7 +27,7 @@ public class DomainUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         UserModel user;
         RunnerModel runner;
-        if((user = userRepository.findByUsername(username)) != null) {
+        if((user = userRepository.findByUsername(username).orElse(null)) != null) {
             return buildUserDetails(username, user);
         } else if((runner = runnerRepository.findByRunnername(username)) != null) {
             return buildRunnerDetails(username, runner);

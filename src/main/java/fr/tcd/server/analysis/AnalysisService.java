@@ -1,14 +1,11 @@
 package fr.tcd.server.analysis;
 
-import fr.tcd.server.analysis.exception.AnalysisNotCreatedException;
 import fr.tcd.server.analysis.exception.AnalysisNotFoundException;
-import fr.tcd.server.document.exception.DocumentNotCreatedException;
-import fr.tcd.server.runner_analysis.exception.RunnerAnalysisNotSentException;
+import fr.tcd.server.analysis.repository.AnalysisRepository;
 import fr.tcd.server.analysis.status.AnalysisStatus;
 import fr.tcd.server.document.DocumentModel;
 import fr.tcd.server.document.DocumentRepository;
 import fr.tcd.server.document.exception.DocumentNotFoundException;
-import fr.tcd.server.document.exception.DocumentNotUpdatedException;
 import fr.tcd.server.runner_analysis.RunnerAnalysisService;
 import org.springframework.stereotype.Service;
 
@@ -34,29 +31,20 @@ public class AnalysisService {
         DocumentModel document = documentRepository.findById(docID).orElseThrow(DocumentNotFoundException::new);
         //TODO: Check if the user is the owner of the document
 
-        AnalysisModel newAnalysis = createAnalysis(analysisDTO, document.getOwner());
-        List<AnalysisModel> analysesOfDocument = document.getAnalyses();
-        analysesOfDocument.add(newAnalysis);
-        document.setAnalyses(analysesOfDocument);
-
-        DocumentModel newDocument = Optional.of(documentRepository.save(document)).orElseThrow(DocumentNotCreatedException::new);
-
-        runnerAnalysisService.formAndSendRunnerAnalysis(newDocument, newAnalysis);
+        AnalysisModel newAnalysis = createAnalysis(analysisDTO);
+        DocumentAnalysisContainer documentAnalysis = analysisRepository.saveInDocument(newAnalysis, document);
+        runnerAnalysisService.formAndSendRunnerAnalysis(documentAnalysis.getDocument(), documentAnalysis.getAnalysis());
         return newAnalysis;
     }
 
-    private AnalysisModel createAnalysis(AnalysisDTO analysisDTO, String owner) {
-
-        AnalysisModel newAnalysis = new AnalysisModel()
+    private AnalysisModel createAnalysis(AnalysisDTO analysisDTO) {
+        return new AnalysisModel()
                 .setName(analysisDTO.getName())
                 .setType(analysisDTO.getType())
-                .setStatus(AnalysisStatus.TO_START)
-                .setOwner(owner);
-
-        return Optional.of(analysisRepository.save(newAnalysis)).orElseThrow(AnalysisNotCreatedException::new);
+                .setStatus(AnalysisStatus.TO_START);
     }
 
     public List<AnalysisModel> getMyAnalyses(String name) {
-        return Optional.ofNullable(analysisRepository.findByOwner(name)).orElseThrow(AnalysisNotFoundException::new);
+        return Optional.ofNullable(analysisRepository.findAllByDocumentOwner(name)).orElseThrow(AnalysisNotFoundException::new);
     }
 }

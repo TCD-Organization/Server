@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface DocumentRepository extends MongoRepository<DocumentModel, Long>, DocumentRepositoryCustom {
     boolean existsByOwnerAndChecksum(String owner, String checksum);
     Optional<DocumentModel> findById(String docID);
+    Optional<List<DocumentModel>> findAllByOwner(String owner);
     //DocumentModel findById(String docId);
 }
 
