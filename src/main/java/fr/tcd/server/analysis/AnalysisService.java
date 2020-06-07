@@ -1,6 +1,7 @@
 package fr.tcd.server.analysis;
 
 import fr.tcd.server.analysis.exception.AnalysisNotCreatedException;
+import fr.tcd.server.analysis.exception.AnalysisNotFoundException;
 import fr.tcd.server.document.exception.DocumentNotCreatedException;
 import fr.tcd.server.runner_analysis.exception.RunnerAnalysisNotSentException;
 import fr.tcd.server.analysis.status.AnalysisStatus;
@@ -33,8 +34,7 @@ public class AnalysisService {
         DocumentModel document = documentRepository.findById(docID).orElseThrow(DocumentNotFoundException::new);
         //TODO: Check if the user is the owner of the document
 
-        AnalysisModel newAnalysis = createAnalysis(analysisDTO);
-
+        AnalysisModel newAnalysis = createAnalysis(analysisDTO, document.getOwner());
         List<AnalysisModel> analysesOfDocument = document.getAnalyses();
         analysesOfDocument.add(newAnalysis);
         document.setAnalyses(analysesOfDocument);
@@ -45,14 +45,18 @@ public class AnalysisService {
         return newAnalysis;
     }
 
-    private AnalysisModel createAnalysis(AnalysisDTO analysisDTO) {
+    private AnalysisModel createAnalysis(AnalysisDTO analysisDTO, String owner) {
 
         AnalysisModel newAnalysis = new AnalysisModel()
                 .setName(analysisDTO.getName())
                 .setType(analysisDTO.getType())
-                .setStatus(AnalysisStatus.TO_START);
+                .setStatus(AnalysisStatus.TO_START)
+                .setOwner(owner);
 
         return Optional.of(analysisRepository.save(newAnalysis)).orElseThrow(AnalysisNotCreatedException::new);
     }
 
+    public List<AnalysisModel> getMyAnalyses(String name) {
+        return Optional.ofNullable(analysisRepository.findByOwner(name)).orElseThrow(AnalysisNotFoundException::new);
+    }
 }

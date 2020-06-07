@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-@Document(collection="Analysis")
 @Data
 @Accessors(chain = true)
 public class AnalysisModel {

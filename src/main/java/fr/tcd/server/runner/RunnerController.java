@@ -23,10 +23,10 @@ public class RunnerController {
 
     @PostMapping
     public ResponseEntity<String> registerRunner(@Valid @RequestBody RunnerDTO runnerDTO, UriComponentsBuilder uriBuilder) {
-        String runnerId = runnerService.registerNewRunner(runnerDTO).getId();
-        URI location = uriBuilder.path("/runner/{runnerId}").build(runnerId);
+        String runnerName = runnerService.registerNewRunner(runnerDTO).getRunnername();
+        URI location = uriBuilder.path("/runner/{runnerName}").build(runnerName);
 
-        return ResponseEntity.created(location).body(runnerId);
+        return ResponseEntity.created(location).body(runnerName);
     }
 
     // ============== NON-API ==============

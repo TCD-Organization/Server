@@ -21,9 +21,7 @@ public class DocumentModel {
     private String content;
     private Double size;
     private List<AnalysisModel> analyses;
-
-    @Field("user_id")
-    private String userId;
+    private String owner;
 
     /*
     public DocumentDTO toDTO() {

@@ -26,7 +26,6 @@ public class DocumentService {
     public DocumentModel createDocument(DocumentDTO documentDTO, String username) {
         //TODO: Get size
         //TODO: Get user_id Claims claims = tokenProvider.decodeToken(token).getBody();
-        UserModel user = Optional.ofNullable(userRepository.findByUsername(username)).orElseThrow(UserNotFoundException::new);
 
         String hash = hashText(documentDTO.getContent());
 
@@ -37,7 +36,7 @@ public class DocumentService {
                 .setContent(documentDTO.getContent())
                 //.setSize(size)
                 .setAnalyses(new ArrayList<AnalysisModel>())
-                .setUserId(user.getId());
+                .setOwner(username);
 
         return Optional.of(documentRepository.save(documentModel)).orElseThrow(DocumentNotCreatedException::new);
     }
