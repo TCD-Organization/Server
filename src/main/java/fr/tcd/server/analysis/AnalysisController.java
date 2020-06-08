@@ -10,7 +10,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/analysis")
 public class AnalysisController {
 
     private final AnalysisService analysisService;
@@ -19,18 +19,24 @@ public class AnalysisController {
         this.analysisService = analysisService;
     }
 
-    @PostMapping("/document/{docID}/analysis")
-    public ResponseEntity<String> createAnalysis(@PathVariable("docID") String docID, @Valid @RequestBody AnalysisDTO analysisDTO, UriComponentsBuilder uriBuilder) {
-        String newAnalysisId = analysisService.processNewAnalysis(docID, analysisDTO).getId();
-        URI location = uriBuilder.path("/document/{docId}/analysis/{Id}").build(docID, newAnalysisId);
+    @PostMapping
+    public ResponseEntity<String> createAnalysis(@Valid @RequestBody AnalysisDTO analysisDTO, Principal principal, UriComponentsBuilder uriBuilder) {
+        String newAnalysisId = analysisService.processNewAnalysis(analysisDTO, principal.getName()).getId();
+        URI location = uriBuilder.path("/analysis/{analysisId}").build(newAnalysisId);
 
         return ResponseEntity.created(location).body(newAnalysisId);
     }
 
-    @GetMapping("/analyses")
+    @GetMapping("/all")
     public ResponseEntity<List<AnalysisModel>> getMyAnalyses(Principal principal) {
         List<AnalysisModel> analyses = analysisService.getMyAnalyses(principal.getName());
         return ResponseEntity.ok(analyses);
+    }
+
+    @GetMapping("/{analysisId}")
+    public ResponseEntity<AnalysisModel> getAnalysis(@PathVariable("analysisId") String analysisId, Principal principal) {
+        AnalysisModel analysis = analysisService.getAnalysis(analysisId, principal.getName());
+        return ResponseEntity.ok(analysis);
     }
 
     // ============== NON-API ==============

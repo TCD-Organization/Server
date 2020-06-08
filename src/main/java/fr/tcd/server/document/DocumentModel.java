@@ -1,13 +1,9 @@
 package fr.tcd.server.document;
 
-import fr.tcd.server.analysis.AnalysisModel;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.util.List;
 
 @Document(collection="Document")
 @Data
@@ -20,7 +16,7 @@ public class DocumentModel {
     private String genre;
     private String content;
     private Double size;
-    private List<AnalysisModel> analyses;
+    //private List<AnalysisModel> analyses; // TODO : Only have the 10 latest for memory opt?
     private String owner;
 
     /*

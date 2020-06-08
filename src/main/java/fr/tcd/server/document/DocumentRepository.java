@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface DocumentRepository extends MongoRepository<DocumentModel, Long> {
     boolean existsByOwnerAndChecksum(String owner, String checksum);
-    Optional<DocumentModel> findById(String docID);
-    Optional<List<DocumentModel>> findAllByOwner(String owner);
+    Optional<DocumentModel> findByIdAndOwner(String docID, String owner);
+    List<DocumentModel> findByOwner(String owner);
     //DocumentModel findById(String docId);
 }

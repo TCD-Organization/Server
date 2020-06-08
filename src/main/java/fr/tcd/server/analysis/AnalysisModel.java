@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
+@Document(collection="Analysis")
 @Data
 @Accessors(chain = true)
 public class AnalysisModel {
@@ -16,6 +17,8 @@ public class AnalysisModel {
     private String name;
     private String type; // ObjectID of Analysis_Type
     private AnalysisStatus status;
+    private String document_id;
+    private String owner;
     private String result;
     private Date startTime;
     private Date endTime;
