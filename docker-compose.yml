@@ -40,16 +40,19 @@ services:
     build: .
     image: 'tcd-jee-server'
     container_name: 'tcd-jee-server'
+    depends_on:
+      - mongo
+      - rabbitmq
     ports:
-    - "${TCD_JEE_SERVER_PORT:-8080}:8080"
+      - "${TCD_JEE_SERVER_PORT:-8080}:8080"
     environment:
       - DB_AUTHENTICATION_DATABASE=${TCD_MONGO_AUTHENTICATION_DATABASE:-admin}
       - DB_USERNAME=${TCD_MONGO_ROOT_USERNAME:-admin}
       - DB_PASSWORD=${TCD_MONGO_ROOT_PASSWORD:-admin}
       - DB_NAME=${TCD_MONGO_DATABASE_NAME:-database}
       - DB_PORT=${TCD_MONGO_PORT:-27017}
-      - DB_HOST=${TCD_MONGO_HOST:-127.0.0.1}
-      - BROKER_HOST=${TCD_RABBITMQ_BROKER_HOST:-127.0.0.1}
+      - DB_HOST=${TCD_MONGO_HOST:-mongo}
+      - BROKER_HOST=${TCD_RABBITMQ_BROKER_HOST:-rabbitmq}
       - BROKER_PORT=${TCD_RABBITMQ_BROKER_PORT:-15672}
       - JEE_SECURITY_TOKEN_SECRET=${TCD_JEE_SECURITY_TOKEN_SECRET:-default}
     restart: always

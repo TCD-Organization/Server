@@ -12,6 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -34,6 +35,18 @@ public class DocumentController {
         URI location = uriBuilder.path("/document/{docId}").build(newDocumentId);
 
         return ResponseEntity.created(location).body(newDocumentId);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<DocumentModel>> getMyDocuments(Principal principal) {
+        List<DocumentModel> analyses = documentService.getMyDocuments(principal.getName());
+        return ResponseEntity.ok(analyses);
+    }
+
+    @GetMapping("/{documentId}")
+    public ResponseEntity<DocumentModel> getAnalysis(@PathVariable("documentId") String documentId, Principal principal) {
+        DocumentModel analysis = documentService.getDocument(documentId, principal.getName());
+        return ResponseEntity.ok(analysis);
     }
 
     // ============== NON-API ==============
