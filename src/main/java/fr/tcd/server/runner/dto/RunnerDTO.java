@@ -25,6 +25,8 @@ public class RunnerDTO {
         return new RunnerModel()
                 .setRunnername(this.getRunnername())
                 .setKey(passwordEncoder.encode(this.getKey()))
-                .setStatus(RunnerStatus.DOWN);
+                .setStatus(RunnerStatus.DOWN)
+                .setIp(ip)
+                .setPort(port);
     }
 }

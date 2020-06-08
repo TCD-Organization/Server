@@ -20,10 +20,7 @@ public class DocumentService {
     }
 
     public DocumentModel createDocument(DocumentDTO documentDTO, String owner) {
-        //TODO: Get size
-
         String hash = hashText(documentDTO.getContent());
-        System.out.println("Hash : "+ hash);
         if (documentAlreadyExists(hash, owner)) {
             throw new DocumentAlreadyExistsException();
         }

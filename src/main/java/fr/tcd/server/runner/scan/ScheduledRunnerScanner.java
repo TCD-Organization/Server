@@ -25,18 +25,15 @@ public class ScheduledRunnerScanner {
 
     @Async
     @Scheduled(fixedRate = 5000)
-    public void scanRunnersUp() throws InterruptedException {
+    public void scanRunnersUp() {
         List<RunnerModel> runners = runnerRepository.findByStatus(RunnerStatus.UP);
-        System.out.println("runners : "+ runners);
         runners.forEach(this::checkRunner);
-
     }
 
     private void checkRunner(RunnerModel runner) {
-        System.out.println(runner);
-        String url = runner.getIp() + ":" + runner.getPort() + "/ping";
+        String url = "http://" + runner.getIp() + ":" + runner.getPort() + "/ping";
         ResponseEntity<String> response = webClientBean.sendGetRequest(url);
-        if(response.getStatusCode().equals(HttpStatus.REQUEST_TIMEOUT)) {
+        if(!response.getStatusCode().equals(HttpStatus.OK)) {
             runner.setStatus(RunnerStatus.DOWN);
             // TODO: Stop all analyses by this runner
             runnerRepository.save(runner);

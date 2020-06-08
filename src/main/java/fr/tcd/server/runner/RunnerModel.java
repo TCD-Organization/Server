@@ -34,6 +34,8 @@ public class RunnerModel {
         RunnerDTO runnerDTO = new RunnerDTO();
         runnerDTO.setRunnername(runnername);
         runnerDTO.setKey(key);
+        runnerDTO.setIp(ip);
+        runnerDTO.setPort(port);
         return runnerDTO;
     }
 }

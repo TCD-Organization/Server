@@ -16,10 +16,9 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Data
 public class WebClientBean {
-    private TcpClient tcpClient;
     private WebClient webClient;
     private WebClientBean() {
-        this.tcpClient = TcpClient
+        TcpClient tcpClient = TcpClient
                 .create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
                 .doOnConnected(connection -> {
