@@ -15,7 +15,6 @@ public class DocumentModel {
     private String hash;
     private String genre;
     private String content;
-    private Double size;
     //private List<AnalysisModel> analyses; // TODO : Only have the 10 latest for memory opt?
     private String owner;
 

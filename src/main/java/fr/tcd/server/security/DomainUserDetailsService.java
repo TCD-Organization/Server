@@ -29,7 +29,7 @@ public class DomainUserDetailsService implements UserDetailsService {
         RunnerModel runner;
         if((user = userRepository.findByUsername(username).orElse(null)) != null) {
             return buildUserDetails(username, user);
-        } else if((runner = runnerRepository.findByRunnername(username)) != null) {
+        } else if((runner = runnerRepository.findByRunnername(username).orElse(null)) != null) {
             return buildRunnerDetails(username, runner);
         } else {
             throw new UsernameNotFoundException("User " + username + " not found");

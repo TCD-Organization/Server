@@ -48,24 +48,6 @@ public class TokenProvider {
             .compact();
     }
 
-    // Generates a token for runner when login route is called
-    public String createRunnerToken(Authentication authentication, int port) {
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
-
-        long now = (new Date()).getTime();
-        Date validity = new Date(now + this.tokenValidityInMilliseconds);
-
-        return Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
-                .claim("port", port)
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .setExpiration(validity)
-                .compact();
-    }
-
     // Generates Spring Security Authentication token when filtering requests
     public Authentication getAuthentication(String token) {
         Claims claims = decodeToken(token).getBody();

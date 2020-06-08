@@ -22,6 +22,11 @@ public class AccessControlDemoController {
         ));
     }
 
+    @GetMapping("/ping")
+    public ResponseEntity ping() {
+        return ResponseEntity.ok("pong");
+    }
+
     @GetMapping("/admin/watcher")
     public ResponseEntity adminWatch() {
         return ResponseEntity.ok(Map.of(

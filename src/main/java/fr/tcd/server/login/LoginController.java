@@ -38,19 +38,6 @@ public class LoginController {
         return ResponseEntity.ok().headers(httpHeaders).build();
     }
 
-    @PostMapping("/runner")
-    public ResponseEntity<Void> loginRunner(@RequestBody LoginRunnerDTO loginRunnerDTO) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRunnerDTO.getRunnername(), loginRunnerDTO.getKey());
-        Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
-        String token = tokenProvider.createRunnerToken(authentication, loginRunnerDTO.getPort());
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(AUTHORIZATION, "Bearer " + token);
-        return ResponseEntity.ok().headers(httpHeaders).build();
-    }
-
-
-
     // ============== NON-API ==============
 
 }
