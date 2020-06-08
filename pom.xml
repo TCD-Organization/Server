@@ -20,6 +20,7 @@
         <jaxb.version>2.3.1</jaxb.version>
         <amqp.version>2.0.3.RELEASE</amqp.version>
         <commons.version>1.9</commons.version>
+        <webflux.version>5.2.5.RELEASE</webflux.version>
     </properties>
 
     <dependencies>
@@ -58,6 +59,19 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
             <version>${amqp.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-webflux Web requests-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webflux</artifactId>
+            <version>${webflux.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.projectreactor.netty/reactor-netty Tcp configuration for web requests-->
+        <dependency>
+            <groupId>io.projectreactor.netty</groupId>
+            <artifactId>reactor-netty</artifactId>
+        </dependency>
+
+
 
         <dependency>
             <groupId>org.projectlombok</groupId>
