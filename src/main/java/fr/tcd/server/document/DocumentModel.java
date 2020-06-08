@@ -12,7 +12,7 @@ public class DocumentModel {
     @Id
     private String id;
     private String name;
-    private String checksum;
+    private String hash;
     private String genre;
     private String content;
     private Double size;
