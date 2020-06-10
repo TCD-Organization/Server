@@ -31,7 +31,7 @@ public class AnalysisService {
         //TODO: If there is any fail, roll back the creation
 
         DocumentModel document = documentService.getDocument(analysisDTO.getDoc_id(), owner);
-        AnalysisModel analysis = createAnalysis(analysisDTO, document.getId(), document.getOwner());
+        AnalysisModel analysis = createAnalysis(analysisDTO, document.getId(), document.getName(), document.getOwner());
         AnalysisModel savedAnalysis = Optional.ofNullable(analysisRepository.save(analysis))
                 .orElseThrow(AnalysisNotCreatedException::new);
 
