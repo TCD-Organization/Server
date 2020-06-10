@@ -1,18 +1,27 @@
 package fr.tcd.server.analysis;
 
-import fr.tcd.server.analysis.exception.AnalysisNotCreatedException;
-import fr.tcd.server.analysis.exception.AnalysisNotFoundException;
+import fr.tcd.server.amqp.AmqpConfig;
+import fr.tcd.server.amqp.front_analyses.FrontAnalysesAmqpConfig;
+import fr.tcd.server.analysis.dto.AnalysisDTO;
+import fr.tcd.server.analysis.dto.AnalysisProgressionDTO;
+import fr.tcd.server.analysis.exception.*;
 import fr.tcd.server.analysis.status.AnalysisStatus;
 import fr.tcd.server.document.DocumentModel;
-import fr.tcd.server.document.DocumentRepository;
 import fr.tcd.server.document.DocumentService;
-import fr.tcd.server.document.exception.DocumentNotFoundException;
-import fr.tcd.server.runner_analysis.RunnerAnalysisService;
+import fr.tcd.server.analysis.runner_analysis.RunnerAnalysisService;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.security.Principal;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+
+import static fr.tcd.server.analysis.status.AnalysisStatus.FINISHED;
 
 @Service
 public class AnalysisService {
@@ -20,11 +29,13 @@ public class AnalysisService {
     private final AnalysisRepository analysisRepository;
     private final DocumentService documentService;
     private final RunnerAnalysisService runnerAnalysisService;
+    private final RabbitTemplate rabbitTemplate;
 
-    public AnalysisService(AnalysisRepository analysisRepository, DocumentService documentService, RunnerAnalysisService runnerAnalysisService) {
+    public AnalysisService(AnalysisRepository analysisRepository, DocumentService documentService, RunnerAnalysisService runnerAnalysisService, RabbitTemplate rabbitTemplate) {
         this.analysisRepository = analysisRepository;
         this.documentService = documentService;
         this.runnerAnalysisService = runnerAnalysisService;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     AnalysisModel processNewAnalysis(AnalysisDTO analysisDTO, String owner) {
@@ -36,6 +47,7 @@ public class AnalysisService {
                 .orElseThrow(AnalysisNotCreatedException::new);
 
         runnerAnalysisService.formAndSendRunnerAnalysis(document, savedAnalysis);
+        formAndSendFrontAnalysis(savedAnalysis);
 
         return savedAnalysis;
     }
@@ -56,5 +68,40 @@ public class AnalysisService {
 
     public AnalysisModel getAnalysis(String id, String owner) {
         return analysisRepository.findByIdAndOwner(id, owner).orElseThrow(AnalysisNotFoundException::new);
+    }
+
+    public AnalysisModel processAnalysisUpdate(AnalysisProgressionDTO analysisProgression, String analysisId) {
+        AnalysisModel analysis = analysisRepository.findById(analysisId).orElseThrow(AnalysisNotFoundException::new);
+        if (analysis.getStatus() == FINISHED) {
+            throw new AnalysisAlreadyFinishedException();
+        }
+        System.out.println("getStatus:"+analysisProgression.getStatus());
+        System.out.println("getStep_number:"+analysisProgression.getStep_number());
+        System.out.println("getTotal_steps:"+analysisProgression.getTotal_steps());
+        analysis.setStatus(analysisProgression.getStatus());
+        analysis.setStep_number(analysisProgression.getStep_number());
+        analysis.setTotal_steps(analysisProgression.getTotal_steps());
+        analysis.setStep_name(analysisProgression.getStep_name());
+        analysis.setLasting_time(analysisProgression.getLasting_time());
+
+        analysis = Optional.ofNullable(analysisRepository.save(analysis)).orElseThrow(AnalysisNotUpdatedException::new);
+        formAndSendFrontAnalysis(analysis);
+        return analysis;
+    }
+
+
+    public void formAndSendFrontAnalysis(AnalysisModel analysis) {
+        String FRONT_ANALYSIS_ROOTING_KEY = "analysis."+analysis.getId();
+        String FRONT_ANALYSIS_QUEUE = "analysis_"+analysis.getId()+"_q";
+
+        try {
+            RabbitAdmin admin = new RabbitAdmin(rabbitTemplate);
+            if (admin.getQueueProperties(FRONT_ANALYSIS_QUEUE) == null)
+                admin.declareQueue(new Queue(FRONT_ANALYSIS_QUEUE, true, false, false));
+                admin.declareBinding(new Binding(FRONT_ANALYSIS_QUEUE, Binding.DestinationType.QUEUE, "type.id.tx", FRONT_ANALYSIS_ROOTING_KEY, null));
+            rabbitTemplate.convertAndSend(FrontAnalysesAmqpConfig.EXCHANGE, FRONT_ANALYSIS_ROOTING_KEY, analysis);
+        } catch (AmqpException e) {
+            throw new AnalysisNotSentException();
+        }
     }
 }

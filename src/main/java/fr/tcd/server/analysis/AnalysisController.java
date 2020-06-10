@@ -1,5 +1,7 @@
 package fr.tcd.server.analysis;
 
+import fr.tcd.server.analysis.dto.AnalysisDTO;
+import fr.tcd.server.analysis.dto.AnalysisProgressionDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -39,6 +41,11 @@ public class AnalysisController {
         return ResponseEntity.ok(analysis);
     }
 
+    @PutMapping("/{analysisId}/progress")
+    public ResponseEntity<AnalysisModel> updateAnalysisProgression(@PathVariable("analysisId") String analysisId, @Valid @RequestBody AnalysisProgressionDTO analysisProgression, Principal principal) {
+        AnalysisModel analysis = analysisService.processAnalysisUpdate(analysisProgression, analysisId);
+        return ResponseEntity.ok(analysis);
+    }
     // ============== NON-API ==============
 
 }
