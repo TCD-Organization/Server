@@ -2,19 +2,24 @@ package fr.tcd.server.analysis.dto;
 
 import fr.tcd.server.analysis.status.AnalysisStatus;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 public class AnalysisProgressionDTO {
     // TODO : @ValidStatus that verifies if it is not "TO_START"
-    @NotEmpty(message = "status must not be empty")
     private AnalysisStatus status;
 
-    @NotEmpty(message = "step_number must not be empty")
+    // TODO : @ValidStatus for all the cases of each field
+    @NotNull(message = "step_number must not be null")
+    @Range(min = 0)
     private int step_number;
 
-    @NotEmpty(message = "total_steps must not be empty")
+    @NotNull(message = "total_steps must not be null")
+    @Range(min = 1)
     private int total_steps;
 
     @NotEmpty(message = "step_name must not be empty")
@@ -22,4 +27,6 @@ public class AnalysisProgressionDTO {
 
     @NotEmpty(message = "lasting_time must not be empty")
     private String lasting_time;
+
+    private String result;
 }

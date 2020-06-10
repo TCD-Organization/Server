@@ -24,9 +24,9 @@ public class AnalysisModel {
     private int step_number;
     private int total_steps;
     private String step_name;
-    private Date startTime;
+    private Date start_time;
     private String lasting_time;
-    private Date endTime;
+    private Date end_time;
     private String result;
 
     /*

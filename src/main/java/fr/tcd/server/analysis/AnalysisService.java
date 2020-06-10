@@ -18,10 +18,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import static fr.tcd.server.analysis.status.AnalysisStatus.FINISHED;
+import static fr.tcd.server.analysis.status.AnalysisStatus.TO_START;
 
 @Service
 public class AnalysisService {
@@ -70,19 +73,29 @@ public class AnalysisService {
         return analysisRepository.findByIdAndOwner(id, owner).orElseThrow(AnalysisNotFoundException::new);
     }
 
-    public AnalysisModel processAnalysisUpdate(AnalysisProgressionDTO analysisProgression, String analysisId) {
+    public AnalysisModel processAnalysisUpdate(AnalysisProgressionDTO analysisProgression, String analysisId, String runner) {
         AnalysisModel analysis = analysisRepository.findById(analysisId).orElseThrow(AnalysisNotFoundException::new);
         if (analysis.getStatus() == FINISHED) {
             throw new AnalysisAlreadyFinishedException();
         }
-        System.out.println("getStatus:"+analysisProgression.getStatus());
-        System.out.println("getStep_number:"+analysisProgression.getStep_number());
-        System.out.println("getTotal_steps:"+analysisProgression.getTotal_steps());
+
+        if (analysis.getStatus() == TO_START) {
+            analysis.setStart_time(new Date());
+        }
+
         analysis.setStatus(analysisProgression.getStatus());
+        analysis.setRunner(runner);
         analysis.setStep_number(analysisProgression.getStep_number());
         analysis.setTotal_steps(analysisProgression.getTotal_steps());
         analysis.setStep_name(analysisProgression.getStep_name());
         analysis.setLasting_time(analysisProgression.getLasting_time());
+
+        if (analysisProgression.getStatus() == FINISHED) {
+            analysis.setStep_number(analysisProgression.getTotal_steps());
+            analysis.setEnd_time(new Date());
+            analysis.setLasting_time("0");
+            analysis.setResult(analysisProgression.getResult());
+        }
 
         analysis = Optional.ofNullable(analysisRepository.save(analysis)).orElseThrow(AnalysisNotUpdatedException::new);
         formAndSendFrontAnalysis(analysis);

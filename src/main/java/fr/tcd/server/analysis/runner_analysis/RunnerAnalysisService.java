@@ -26,7 +26,7 @@ public class RunnerAnalysisService {
                 .setId(analysis.getDocument_id())
                 .setGenre(document.getGenre())
                 .setContent(document.getContent())
-                .setAnalyse(analysis);
+                .setAnalysis(analysis);
         try {
             rabbitTemplate.convertAndSend(AmqpConfig.EXCHANGE, NEW_RUNNER_ANALYSIS_ROOTING_KEY, runnerAnalysis);
         } catch (AmqpException e) {
