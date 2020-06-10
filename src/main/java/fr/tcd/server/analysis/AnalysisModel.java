@@ -18,6 +18,7 @@ public class AnalysisModel {
     private String type; // ObjectID of Analysis_Type
     private AnalysisStatus status;
     private String document_id;
+    private Strign document_name;
     private String owner;
     private String result;
     private Date startTime;

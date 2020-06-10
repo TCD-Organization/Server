@@ -31,20 +31,22 @@ public class AnalysisService {
         //TODO: If there is any fail, roll back the creation
 
         DocumentModel document = documentService.getDocument(analysisDTO.getDoc_id(), owner);
-        //TODO: Check if the user is the owner of the document
         AnalysisModel analysis = createAnalysis(analysisDTO, document.getId(), document.getOwner());
         AnalysisModel savedAnalysis = Optional.ofNullable(analysisRepository.save(analysis))
                 .orElseThrow(AnalysisNotCreatedException::new);
+
         runnerAnalysisService.formAndSendRunnerAnalysis(document, savedAnalysis);
+
         return savedAnalysis;
     }
 
-    private AnalysisModel createAnalysis(AnalysisDTO analysisDTO, String doc_id, String owner) {
+    private AnalysisModel createAnalysis(AnalysisDTO analysisDTO, String doc_id, String doc_name, String owner) {
         return new AnalysisModel()
                 .setName(analysisDTO.getName())
                 .setType(analysisDTO.getType())
                 .setStatus(AnalysisStatus.TO_START)
                 .setDocument_id(doc_id)
+                .setDocument_name(doc_name)
                 .setOwner(owner);
     }
 
