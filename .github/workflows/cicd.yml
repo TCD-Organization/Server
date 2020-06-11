@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: tcd-server
     steps:
       - name: Checkout repository access
         uses: actions/checkout@v2 # Check if the workflow can access our repo
