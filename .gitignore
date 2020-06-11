@@ -6,6 +6,7 @@ target/
 !**/src/test/**
 *.env
 
+
 ### Generated files ###
 *.class
 *.log
