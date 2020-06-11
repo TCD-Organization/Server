@@ -1,6 +1,6 @@
 package fr.tcd.server.amqp.front_analyses;
 
-import fr.tcd.server.amqp.AmqpAnalysisNotSentException;
+import fr.tcd.server.amqp.exception.AmqpAnalysisNotSentException;
 import fr.tcd.server.analysis.AnalysisModel;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Binding;

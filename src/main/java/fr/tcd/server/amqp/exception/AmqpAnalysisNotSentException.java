@@ -1,4 +1,4 @@
-package fr.tcd.server.amqp;
+package fr.tcd.server.amqp.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

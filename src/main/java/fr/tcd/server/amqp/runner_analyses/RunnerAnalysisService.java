@@ -1,6 +1,6 @@
 package fr.tcd.server.amqp.runner_analyses;
 
-import fr.tcd.server.amqp.AmqpAnalysisNotSentException;
+import fr.tcd.server.amqp.exception.AmqpAnalysisNotSentException;
 import fr.tcd.server.analysis.AnalysisModel;
 import fr.tcd.server.document.DocumentModel;
 import org.springframework.amqp.AmqpException;
@@ -20,13 +20,13 @@ public class RunnerAnalysisService {
     }
 
     public void formAndSendRunnerAnalysis(DocumentModel document, AnalysisModel analysis) {
-        RunnerAnalysis runnerAnalysis = new RunnerAnalysis()
+        RunnerAnalysisDTO runnerAnalysisDTO = new RunnerAnalysisDTO()
                 .setId(analysis.getDocument_id())
                 .setGenre(document.getGenre())
                 .setContent(document.getContent())
                 .setAnalysis(analysis);
         try {
-            rabbitTemplate.convertAndSend(RunnerAnalysesAmqpConfig.EXCHANGE, NEW_RUNNER_ANALYSIS_ROOTING_KEY, runnerAnalysis);
+            rabbitTemplate.convertAndSend(RunnerAnalysesAmqpConfig.EXCHANGE, NEW_RUNNER_ANALYSIS_ROOTING_KEY, runnerAnalysisDTO);
         } catch (AmqpException e) {
             throw new AmqpAnalysisNotSentException();
         }

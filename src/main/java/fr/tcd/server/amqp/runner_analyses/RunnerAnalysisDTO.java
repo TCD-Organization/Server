@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class RunnerAnalysis {
+public class RunnerAnalysisDTO {
     private String Id;
     private String genre;
     private String content;
