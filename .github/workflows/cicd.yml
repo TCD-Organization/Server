@@ -49,7 +49,7 @@ jobs:
           export TCD_MONGO_EXPRESS_ADMIN_PASSWORD=${{ secrets.TCD_MONGO_EXPRESS_ADMIN_PASSWORD }} &&
           export TCD_JEE_SERVER_PORT=${{ secrets.TCD_JEE_SERVER_PORT }} &&
           export TCD_JEE_SECURITY_TOKEN_SECRET=${{ secrets.TCD_JEE_SECURITY_TOKEN_SECRET }} &&
-          echo "Env vars imported" && printenv
+          echo "Env vars imported" && echo $TCD_JEE_SECURITY_TOKEN_SECRET
           
       - name: Launch Jee-server
         run:  docker-compose up jee-server
