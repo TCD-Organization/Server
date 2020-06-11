@@ -46,6 +46,12 @@ public class AnalysisController {
         AnalysisModel analysis = analysisService.processAnalysisUpdate(analysisProgression, analysisId, principal.getName());
         return ResponseEntity.ok(analysis.getId());
     }
+
+    @DeleteMapping("/{analysisId}")
+    public ResponseEntity<Void> deleteAnalysis(@PathVariable("analysisId") String analysisId, Principal principal) {
+        analysisService.deleteAnalysis(analysisId, principal.getName());
+        return ResponseEntity.ok().build();
+    }
     // ============== NON-API ==============
 
 }

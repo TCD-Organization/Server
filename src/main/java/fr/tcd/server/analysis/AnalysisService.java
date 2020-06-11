@@ -1,13 +1,13 @@
 package fr.tcd.server.analysis;
 
 import fr.tcd.server.amqp.front_analyses.FrontAnalysisService;
+import fr.tcd.server.amqp.runner_analyses.RunnerAnalysisService;
 import fr.tcd.server.analysis.dto.AnalysisDTO;
 import fr.tcd.server.analysis.dto.AnalysisProgressionDTO;
 import fr.tcd.server.analysis.exception.AnalysisAlreadyFinishedException;
 import fr.tcd.server.analysis.exception.AnalysisNotCreatedException;
 import fr.tcd.server.analysis.exception.AnalysisNotFoundException;
 import fr.tcd.server.analysis.exception.AnalysisNotUpdatedException;
-import fr.tcd.server.amqp.runner_analyses.RunnerAnalysisService;
 import fr.tcd.server.analysis.status.AnalysisStatus;
 import fr.tcd.server.document.DocumentModel;
 import fr.tcd.server.document.DocumentService;
@@ -59,14 +59,6 @@ public class AnalysisService {
                 .setOwner(owner);
     }
 
-    public List<AnalysisModel> getMyAnalyses(String name) {
-        return analysisRepository.findByOwner(name);
-    }
-
-    public AnalysisModel getAnalysis(String id, String owner) {
-        return analysisRepository.findByIdAndOwner(id, owner).orElseThrow(AnalysisNotFoundException::new);
-    }
-
     public AnalysisModel processAnalysisUpdate(AnalysisProgressionDTO analysisProgression, String analysisId, String runner) {
         AnalysisModel analysis = analysisRepository.findById(analysisId).orElseThrow(AnalysisNotFoundException::new);
         AnalysisModel updatedAnalysis = updateAnalysis(analysis, analysisProgression, runner);
@@ -99,6 +91,18 @@ public class AnalysisService {
         }
 
         return analysis;
+    }
+
+    public List<AnalysisModel> getMyAnalyses(String name) {
+        return analysisRepository.findByOwner(name);
+    }
+
+    public AnalysisModel getAnalysis(String id, String owner) {
+        return analysisRepository.findByIdAndOwner(id, owner).orElseThrow(AnalysisNotFoundException::new);
+    }
+
+    public void deleteAnalysis(String id, String owner) {
+        analysisRepository.deleteByIdAndOwner(id, owner);
     }
 
 }
