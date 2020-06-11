@@ -8,9 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Accessors(chain = true)
 public class RunnerAnalysis {
     private String Id;

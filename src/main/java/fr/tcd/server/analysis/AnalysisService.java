@@ -110,7 +110,7 @@ public class AnalysisService {
         try {
             RabbitAdmin admin = new RabbitAdmin(rabbitTemplate);
             if (admin.getQueueProperties(FRONT_ANALYSIS_QUEUE) == null)
-                admin.declareQueue(new Queue(FRONT_ANALYSIS_QUEUE, true, false, false));
+                admin.declareQueue(new Queue(FRONT_ANALYSIS_QUEUE, true, false, true));
                 admin.declareBinding(new Binding(FRONT_ANALYSIS_QUEUE, Binding.DestinationType.QUEUE, "type.id.tx", FRONT_ANALYSIS_ROOTING_KEY, null));
             rabbitTemplate.convertAndSend(FrontAnalysesAmqpConfig.EXCHANGE, FRONT_ANALYSIS_ROOTING_KEY, analysis);
         } catch (AmqpException e) {

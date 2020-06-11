@@ -10,14 +10,17 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class AnalysisProgressionDTO {
-    // TODO : @ValidStatus that verifies if it is not "TO_START"
+    // TODO: @ValidStatus cannot be "TO_START"
     private AnalysisStatus status;
 
-    // TODO : @ValidStatus for all the cases of each field
+    // TODO: @ValidStatus cannot be above total_steps
+    // TODO: @ValidStatus cannot be different than total_steps if status is "FINISHED"
+    // TODO: @ValidStatus cannot be total_steps or above if status is not "FINISHED"
     @NotNull(message = "step_number must not be null")
     @Range(min = 0)
     private int step_number;
 
+    // TODO: @ValidStatus cannot be below step_number
     @NotNull(message = "total_steps must not be null")
     @Range(min = 1)
     private int total_steps;
@@ -28,5 +31,6 @@ public class AnalysisProgressionDTO {
     @NotEmpty(message = "lasting_time must not be empty")
     private String lasting_time;
 
+    // TODO: @ValidStatus cannot be empty if status is "FINISHED"
     private String result;
 }
