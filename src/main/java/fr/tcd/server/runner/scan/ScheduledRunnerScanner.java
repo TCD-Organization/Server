@@ -3,7 +3,6 @@ package fr.tcd.server.runner.scan;
 import fr.tcd.server.runner.RunnerModel;
 import fr.tcd.server.runner.RunnerRepository;
 import fr.tcd.server.runner.status.RunnerStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -17,14 +16,15 @@ import java.util.List;
 @EnableAsync
 public class ScheduledRunnerScanner {
     private final RunnerRepository runnerRepository;
-    @Autowired WebClientBean webClientBean;
+    private final WebClientBean webClientBean;
 
-    public ScheduledRunnerScanner(RunnerRepository runnerRepository) {
+    public ScheduledRunnerScanner(RunnerRepository runnerRepository, WebClientBean webClientBean) {
         this.runnerRepository = runnerRepository;
+        this.webClientBean = webClientBean;
     }
 
     @Async
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRateString = "${runner.scan.rate}")
     public void scanRunnersUp() {
         List<RunnerModel> runners = runnerRepository.findByStatus(RunnerStatus.UP);
         runners.forEach(this::checkRunner);

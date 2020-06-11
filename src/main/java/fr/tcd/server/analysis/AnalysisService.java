@@ -7,7 +7,7 @@ import fr.tcd.server.analysis.exception.AnalysisAlreadyFinishedException;
 import fr.tcd.server.analysis.exception.AnalysisNotCreatedException;
 import fr.tcd.server.analysis.exception.AnalysisNotFoundException;
 import fr.tcd.server.analysis.exception.AnalysisNotUpdatedException;
-import fr.tcd.server.analysis.runner_analysis.RunnerAnalysisService;
+import fr.tcd.server.amqp.runner_analyses.RunnerAnalysisService;
 import fr.tcd.server.analysis.status.AnalysisStatus;
 import fr.tcd.server.document.DocumentModel;
 import fr.tcd.server.document.DocumentService;

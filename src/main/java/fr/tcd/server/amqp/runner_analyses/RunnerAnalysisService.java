@@ -1,10 +1,7 @@
-package fr.tcd.server.analysis.runner_analysis;
+package fr.tcd.server.amqp.runner_analyses;
 
-import fr.tcd.server.amqp.AmqpConfig;
-import fr.tcd.server.amqp.runner_analyses.RunnerAnalysesAmqpConfig;
-import fr.tcd.server.amqp.runner_analyses.RunnerAnalysis;
+import fr.tcd.server.amqp.AmqpAnalysisNotSentException;
 import fr.tcd.server.analysis.AnalysisModel;
-import fr.tcd.server.analysis.runner_analysis.exception.RunnerAnalysisNotSentException;
 import fr.tcd.server.document.DocumentModel;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -31,7 +28,7 @@ public class RunnerAnalysisService {
         try {
             rabbitTemplate.convertAndSend(RunnerAnalysesAmqpConfig.EXCHANGE, NEW_RUNNER_ANALYSIS_ROOTING_KEY, runnerAnalysis);
         } catch (AmqpException e) {
-            throw new RunnerAnalysisNotSentException();
+            throw new AmqpAnalysisNotSentException();
         }
     }
 

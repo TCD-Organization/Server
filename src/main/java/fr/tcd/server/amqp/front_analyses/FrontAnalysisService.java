@@ -1,7 +1,7 @@
 package fr.tcd.server.amqp.front_analyses;
 
+import fr.tcd.server.amqp.AmqpAnalysisNotSentException;
 import fr.tcd.server.analysis.AnalysisModel;
-import fr.tcd.server.analysis.exception.AnalysisNotSentException;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Queue;
@@ -28,7 +28,7 @@ public class FrontAnalysisService {
             admin.declareBinding(new Binding(FRONT_ANALYSIS_QUEUE, Binding.DestinationType.QUEUE, "type.id.tx", FRONT_ANALYSIS_ROOTING_KEY, null));
             rabbitTemplate.convertAndSend(FrontAnalysesAmqpConfig.EXCHANGE, FRONT_ANALYSIS_ROOTING_KEY, analysis);
         } catch (AmqpException e) {
-            throw new AnalysisNotSentException();
+            throw new AmqpAnalysisNotSentException();
         }
 
     }
