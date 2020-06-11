@@ -21,14 +21,12 @@ import java.util.stream.Collectors;
 @Component
 public class TokenProvider {
 
-    private UserService userService;
     private static final String AUTHORITIES_KEY = "auth";
     private final long tokenValidityInMilliseconds = Duration.ofMinutes(5).getSeconds() * 1000;
     private final byte[] secret;
 
-    public TokenProvider(@Value("${JEE_SECURITY_TOKEN_SECRET:default}") CharSequence secret, UserService userService) {
+    public TokenProvider(@Value("${security.token.secret}") CharSequence secret) {
         this.secret = secret.toString().getBytes();
-        this.userService = userService;
     }
 
     // Generates a token when login route is called

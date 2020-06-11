@@ -31,18 +31,15 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      - name: Build Docker image
-        run: docker build . --tag tcd-jee-server:dev
-
   deploy-dev:
     needs: build-dev
     runs-on: tcd-server
     steps:
-      - name: Stop previous Docker image
-        run:  (docker stop tcd-jee-server-dev || echo "Container already stopped") && (docker rm tcd-jee-server-dev || echo "Image already removed")
+      - name: Stop previous Jee-server
+        run:  docker-compose down jee-server
 
-      - name: Launch new Docker image
-        run: docker run -d -p 8080:8080 --name "tcd-jee-server-dev" tcd-jee-server:dev
+      - name: Launch new Jee-server
+        run: docker-compose up jee-server
 
 
   build-prod:
@@ -53,15 +50,12 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      - name: Build Docker image
-        run: docker build . --tag tcd-jee-server:prod
-
   deploy-prod:
     needs: build-prod
     runs-on: tcd-server
     steps:
-      - name: Stop previous Docker image
-        run:  (docker stop tcd-jee-server-prod || echo "Container already stopped") && (docker rm tcd-jee-server-prod || echo "Image already removed")
+      - name: Stop previous Jee-server
+        run:  docker-compose down jee-server
 
-      - name: Launch new Docker image
-        run: docker run -d -p 8080:8080 --name "tcd-jee-server-prod" tcd-jee-server:prod
+      - name: Launch new Jee-server
+        run: docker-compose up jee-server
