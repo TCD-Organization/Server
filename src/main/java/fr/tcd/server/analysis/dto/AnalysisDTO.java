@@ -1,4 +1,4 @@
-package fr.tcd.server.analysis;
+package fr.tcd.server.analysis.dto;
 
 import lombok.Data;
 

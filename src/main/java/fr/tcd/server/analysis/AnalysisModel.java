@@ -20,9 +20,14 @@ public class AnalysisModel {
     private String document_id;
     private String document_name;
     private String owner;
+    private String runner;
+    private int step_number;
+    private int total_steps;
+    private String step_name;
+    private Date start_time;
+    private String lasting_time;
+    private Date end_time;
     private String result;
-    private Date startTime;
-    private Date endTime;
 
     /*
     public AnalysisDTO toDTO() {

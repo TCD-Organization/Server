@@ -1,4 +1,4 @@
-package fr.tcd.server.runner_analysis.exception;
+package fr.tcd.server.analysis.runner_analysis.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
