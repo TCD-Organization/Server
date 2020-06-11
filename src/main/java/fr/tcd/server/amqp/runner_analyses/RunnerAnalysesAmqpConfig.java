@@ -4,11 +4,9 @@ import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static fr.tcd.server.amqp.AmqpConfig.EXCHANGE;
-
 @Configuration
 public class RunnerAnalysesAmqpConfig {
-
+    public static final String EXCHANGE = "type.state.tx";
     private static final String QUEUE = "new_runner_analyses_q";
 
     @Bean

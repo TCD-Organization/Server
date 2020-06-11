@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AmqpConfig {
-    public static final String EXCHANGE = "type.state.tx";
 
     @Bean
     RabbitTemplate runnerAnalysesRabbitTemplate(ConnectionFactory connectionFactory) {

@@ -1,6 +1,7 @@
 package fr.tcd.server.analysis.runner_analysis;
 
 import fr.tcd.server.amqp.AmqpConfig;
+import fr.tcd.server.amqp.runner_analyses.RunnerAnalysesAmqpConfig;
 import fr.tcd.server.amqp.runner_analyses.RunnerAnalysis;
 import fr.tcd.server.analysis.AnalysisModel;
 import fr.tcd.server.analysis.runner_analysis.exception.RunnerAnalysisNotSentException;
@@ -28,7 +29,7 @@ public class RunnerAnalysisService {
                 .setContent(document.getContent())
                 .setAnalysis(analysis);
         try {
-            rabbitTemplate.convertAndSend(AmqpConfig.EXCHANGE, NEW_RUNNER_ANALYSIS_ROOTING_KEY, runnerAnalysis);
+            rabbitTemplate.convertAndSend(RunnerAnalysesAmqpConfig.EXCHANGE, NEW_RUNNER_ANALYSIS_ROOTING_KEY, runnerAnalysis);
         } catch (AmqpException e) {
             throw new RunnerAnalysisNotSentException();
         }
