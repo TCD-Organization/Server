@@ -36,7 +36,7 @@ jobs:
     runs-on: tcd-server
     steps:
       - name: Stop previous Jee-server
-        run:  docker-compose down jee-server
+        run:  docker-compose down jee-server || echo "No jee-server to stop"
 
       - name: Launch new Jee-server
         run: docker-compose up jee-server
@@ -55,7 +55,7 @@ jobs:
     runs-on: tcd-server
     steps:
       - name: Stop previous Jee-server
-        run:  docker-compose down jee-server
+        run:  docker-compose down jee-server echo "No jee-server to stop"
 
       - name: Launch new Jee-server
         run: docker-compose up jee-server
