@@ -57,7 +57,25 @@ jobs:
           TCD_MONGO_EXPRESS_ADMIN_PASSWORD: ${{ secrets.TCD_MONGO_EXPRESS_ADMIN_PASSWORD }}
           TCD_JEE_SERVER_PORT: ${{ secrets.TCD_JEE_SERVER_PORT }}
           TCD_JEE_SECURITY_TOKEN_SECRET: ${{ secrets.TCD_JEE_SECURITY_TOKEN_SECRET }}
-        run: docker-compose up -d jee-server
+        run: docker-compose up
+          -e TCD_MONGO_HOST
+          -e TCD_MONGO_PORT
+          -e TCD_MONGO_AUTHENTICATION_DATABASE
+          -e TCD_MONGO_ROOT_USERNAME
+          -e TCD_MONGO_ROOT_PASSWORD
+          -e TCD_MONGO_DATABASE_NAME
+          -e TCD_RABBITMQ_BROKER_HOST
+          -e TCD_RABBITMQ_BROKER_PORT
+          -e TCD_RABBITMQ_MANAGEMENT_PORT
+          -e TCD_RABBITMQ_BROKER_DATA_PATH
+          -e TCD_MONGO_EXPRESS_PORT
+          -e TCD_MONGO_EXPRESS_USER_USERNAME
+          -e TCD_MONGO_EXPRESS_USER_PASSWORD
+          -e TCD_MONGO_EXPRESS_ADMIN_USERNAME
+          -e TCD_MONGO_EXPRESS_ADMIN_PASSWORD
+          -e TCD_JEE_SERVER_PORT
+          -e TCD_JEE_SECURITY_TOKEN_SECRET
+          -d jee-server
 
 
   build-prod:
@@ -94,4 +112,22 @@ jobs:
           TCD_MONGO_EXPRESS_ADMIN_PASSWORD: ${{ secrets.TCD_MONGO_EXPRESS_ADMIN_PASSWORD }}
           TCD_JEE_SERVER_PORT: ${{ secrets.TCD_JEE_SERVER_PORT }}
           TCD_JEE_SECURITY_TOKEN_SECRET: ${{ secrets.TCD_JEE_SECURITY_TOKEN_SECRET }}
-        run: docker-compose up -d jee-server
+        run: docker-compose up
+          -e TCD_MONGO_HOST
+          -e TCD_MONGO_PORT
+          -e TCD_MONGO_AUTHENTICATION_DATABASE
+          -e TCD_MONGO_ROOT_USERNAME
+          -e TCD_MONGO_ROOT_PASSWORD
+          -e TCD_MONGO_DATABASE_NAME
+          -e TCD_RABBITMQ_BROKER_HOST
+          -e TCD_RABBITMQ_BROKER_PORT
+          -e TCD_RABBITMQ_MANAGEMENT_PORT
+          -e TCD_RABBITMQ_BROKER_DATA_PATH
+          -e TCD_MONGO_EXPRESS_PORT
+          -e TCD_MONGO_EXPRESS_USER_USERNAME
+          -e TCD_MONGO_EXPRESS_USER_PASSWORD
+          -e TCD_MONGO_EXPRESS_ADMIN_USERNAME
+          -e TCD_MONGO_EXPRESS_ADMIN_PASSWORD
+          -e TCD_JEE_SERVER_PORT
+          -e TCD_JEE_SECURITY_TOKEN_SECRET
+          -d jee-server
