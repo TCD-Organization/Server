@@ -25,7 +25,7 @@ jobs:
 
   build-dev:
     needs: test
-    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    #if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     runs-on: tcd-server
     steps:
       - name: Build with Maven
@@ -60,7 +60,7 @@ jobs:
           echo "Env vars imported"
           
       - name: Launch Jee-server
-        run:  docker-compose up -d jee-server
+        run:  docker-compose up jee-server
 
 
   build-prod:
@@ -100,4 +100,4 @@ jobs:
           echo "Env vars imported"
           
       - name: Launch Jee-server
-        run:  docker-compose up -d jee-server
+        run:  docker-compose up jee-server
