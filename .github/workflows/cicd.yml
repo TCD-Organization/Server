@@ -55,7 +55,7 @@ jobs:
         run:  docker-compose up jee-server
 
   build-prod:
-    needs: build-prod
+    needs: test
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     runs-on: tcd-server
     steps:
