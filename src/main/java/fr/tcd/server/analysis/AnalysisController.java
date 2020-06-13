@@ -41,17 +41,18 @@ public class AnalysisController {
         return ResponseEntity.ok(analysis);
     }
 
+    @DeleteMapping("/{analysisId}")
+    public ResponseEntity<Void> deleteAnalysis(@PathVariable("analysisId") String analysisId, Principal principal) {
+        analysisService.deleteAnalysis(analysisId, principal.getName());
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/{analysisId}/progress")
     public ResponseEntity<String> updateAnalysisProgression(@PathVariable("analysisId") String analysisId, @Valid @RequestBody AnalysisProgressionDTO analysisProgression, Principal principal) {
         AnalysisModel analysis = analysisService.processAnalysisUpdate(analysisProgression, analysisId, principal.getName());
         return ResponseEntity.ok(analysis.getId());
     }
 
-    @DeleteMapping("/{analysisId}")
-    public ResponseEntity<Void> deleteAnalysis(@PathVariable("analysisId") String analysisId, Principal principal) {
-        analysisService.deleteAnalysis(analysisId, principal.getName());
-        return ResponseEntity.ok().build();
-    }
     // ============== NON-API ==============
 
 }

@@ -1,12 +1,15 @@
 package fr.tcd.server.document;
 
-import fr.tcd.server.document.exception.DocumentAlreadyExistsException;
-import fr.tcd.server.document.exception.DocumentNotCreatedException;
-import fr.tcd.server.document.exception.DocumentNotFoundException;
-import fr.tcd.server.user.UserRepository;
+import fr.tcd.server.document.exception.*;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.pdfbox.cos.COSDocument;
+import org.apache.pdfbox.pdfparser.PDFParser;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.util.PDFTextStripper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +37,41 @@ public class DocumentService {
                     .setOwner(owner);
 
         return Optional.of(documentRepository.save(documentModel)).orElseThrow(DocumentNotCreatedException::new);
+    }
+
+    public String generateTxtFromPDF(File file) {
+        InputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(file);
+
+            String parsedText;
+            PDFParser parser = new PDFParser(fileInputStream);
+            parser.parse();
+
+            COSDocument cosDoc = parser.getDocument();
+            PDFTextStripper pdfStripper = new PDFTextStripper();
+            PDDocument pdDoc = new PDDocument(cosDoc);
+            parsedText = pdfStripper.getText(pdDoc);
+            return parsedText;
+        } catch (IOException e) {
+            throw new DocumentPDFNotReadException();
+        }
+    }
+
+    public File convertMultiPartToFile(MultipartFile file) {
+        File convFile = new File(file.getOriginalFilename());
+        try {
+            convFile.createNewFile();
+            FileOutputStream fos = null;
+            fos = new FileOutputStream(convFile);
+
+            fos.write(file.getBytes());
+            fos.close();
+
+        } catch (IOException e) {
+            throw new DocumentPDFNotDownloadedException();
+        }
+        return convFile;
     }
 
 
