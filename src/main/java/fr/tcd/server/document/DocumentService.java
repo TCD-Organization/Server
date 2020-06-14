@@ -1,17 +1,24 @@
 package fr.tcd.server.document;
 
-import fr.tcd.server.document.exception.*;
+import fr.tcd.server.document.exception.DocumentAlreadyExistsException;
+import fr.tcd.server.document.exception.DocumentContentNotRetrievedException;
+import fr.tcd.server.document.exception.DocumentNotCreatedException;
+import fr.tcd.server.document.exception.DocumentNotFoundException;
+import fr.tcd.server.utils.file_content.exception.FileNotSpecifiedException;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.pdfbox.cos.COSDocument;
-import org.apache.pdfbox.pdfparser.PDFParser;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.util.PDFTextStripper;
+import org.apache.tika.mime.MimeTypeException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+
+import static fr.tcd.server.utils.file.FileUtils.convertMultiPartToFile;
+import static fr.tcd.server.utils.file_content.FileContentUtils.getContentFromFile;
+import static fr.tcd.server.utils.file_content.FileContentUtils.getContentFromLink;
 
 @Service
 public class DocumentService {
@@ -39,41 +46,31 @@ public class DocumentService {
         return Optional.of(documentRepository.save(documentModel)).orElseThrow(DocumentNotCreatedException::new);
     }
 
-    public String generateTxtFromPDF(File file) {
-        InputStream fileInputStream = null;
+    public String getDocumentContent(DocumentDTO documentDTO, @Nullable MultipartFile mpFile) {
+        String content = documentDTO.getContent();
+        String content_type = documentDTO.getContent_type();
+
         try {
-            fileInputStream = new FileInputStream(file);
+            switch (content_type) {
+                case "link":
+                    content = getContentFromLink(content);
 
-            String parsedText;
-            PDFParser parser = new PDFParser(fileInputStream);
-            parser.parse();
+                    break;
+                case "file":
+                    if (mpFile == null)
+                        throw new FileNotSpecifiedException();
 
-            COSDocument cosDoc = parser.getDocument();
-            PDFTextStripper pdfStripper = new PDFTextStripper();
-            PDDocument pdDoc = new PDDocument(cosDoc);
-            parsedText = pdfStripper.getText(pdDoc);
-            return parsedText;
-        } catch (IOException e) {
-            throw new DocumentPDFNotReadException();
+                    File file = convertMultiPartToFile(mpFile);
+                    content = getContentFromFile(file);
+                    break;
+                default:
+                    break;
+            }
+        } catch (IOException | MimeTypeException e) {
+            throw new DocumentContentNotRetrievedException(e);
         }
+        return content;
     }
-
-    public File convertMultiPartToFile(MultipartFile file) {
-        File convFile = new File(file.getOriginalFilename());
-        try {
-            convFile.createNewFile();
-            FileOutputStream fos = null;
-            fos = new FileOutputStream(convFile);
-
-            fos.write(file.getBytes());
-            fos.close();
-
-        } catch (IOException e) {
-            throw new DocumentPDFNotDownloadedException();
-        }
-        return convFile;
-    }
-
 
     public List<DocumentModel> getMyDocuments(String name) {
         return documentRepository.findByOwner(name);
