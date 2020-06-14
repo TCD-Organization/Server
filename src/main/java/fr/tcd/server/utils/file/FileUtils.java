@@ -16,7 +16,7 @@ import java.nio.file.StandardCopyOption;
 import static fr.tcd.server.utils.mime.MimeUtils.getExtension;
 
 public class FileUtils {
-    public static File convertMultiPartToFile(MultipartFile file) throws IOException {
+    public static File downloadMultiPartToFile(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());
         convFile.createNewFile();
         FileOutputStream fos = null;

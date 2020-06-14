@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static fr.tcd.server.utils.file.FileUtils.convertMultiPartToFile;
+import static fr.tcd.server.utils.file.FileUtils.downloadMultiPartToFile;
 import static fr.tcd.server.utils.file_content.FileContentUtils.getContentFromFile;
 import static fr.tcd.server.utils.file_content.FileContentUtils.getContentFromLink;
 
@@ -60,8 +60,9 @@ public class DocumentService {
                     if (mpFile == null)
                         throw new FileNotSpecifiedException();
 
-                    File file = convertMultiPartToFile(mpFile);
+                    File file = downloadMultiPartToFile(mpFile);
                     content = getContentFromFile(file);
+                    file.delete();
                     break;
                 default:
                     break;

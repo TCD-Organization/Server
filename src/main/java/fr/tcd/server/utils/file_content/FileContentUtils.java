@@ -26,7 +26,7 @@ public class FileContentUtils {
         HttpEntity fileResponse = getHttpEntity(url);
         File tmpFile = downloadFileFromHttpEntity(fileResponse);
         content = getContentFromFile(tmpFile);
-        tmpFile.deleteOnExit();
+        tmpFile.delete();
         return content;
     }
 
