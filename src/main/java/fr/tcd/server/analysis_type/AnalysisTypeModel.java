@@ -11,5 +11,5 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class AnalysisTypeModel {
     @Id
     private String id;
-    private AnalysisType type;
+    private String name;
 }

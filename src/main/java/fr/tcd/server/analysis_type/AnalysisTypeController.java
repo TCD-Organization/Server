@@ -3,6 +3,7 @@ package fr.tcd.server.analysis_type;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @RestController
@@ -20,8 +21,14 @@ public class AnalysisTypeController {
         return ResponseEntity.ok(analysisTypeService.getAnalysisTypes());
     }
 
+    @PutMapping
+    public ResponseEntity<String> createAnalysisType(@RequestParam("name") @NotEmpty String name) {
+        String newAnalysisTypeId = analysisTypeService.createAnalysisType(name).getId();
+        return ResponseEntity.ok(newAnalysisTypeId);
+    }
+
     @DeleteMapping("/{analysisTypeId}")
-    public ResponseEntity<List<AnalysisTypeModel>> deleteAnalysisTypes(@PathVariable("analysisTypeId") String analysisTypeId) {
+    public ResponseEntity<List<AnalysisTypeModel>> deleteAnalysisType(@PathVariable("analysisTypeId") String analysisTypeId) {
         analysisTypeService.deleteAnalysisType(analysisTypeId);
         return ResponseEntity.ok().build();
     }
