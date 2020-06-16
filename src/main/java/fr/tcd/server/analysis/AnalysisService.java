@@ -9,6 +9,8 @@ import fr.tcd.server.analysis.exception.AnalysisNotCreatedException;
 import fr.tcd.server.analysis.exception.AnalysisNotFoundException;
 import fr.tcd.server.analysis.exception.AnalysisNotUpdatedException;
 import fr.tcd.server.analysis.status.AnalysisStatus;
+import fr.tcd.server.analysis_type.AnalysisTypeModel;
+import fr.tcd.server.analysis_type.AnalysisTypeRepository;
 import fr.tcd.server.document.DocumentModel;
 import fr.tcd.server.document.DocumentService;
 import org.springframework.stereotype.Service;
@@ -27,12 +29,14 @@ public class AnalysisService {
     private final DocumentService documentService;
     private final RunnerAnalysisService runnerAnalysisService;
     private final FrontAnalysisService frontAnalysisService;
+    private final AnalysisTypeRepository analysisTypeRepository;
 
-    public AnalysisService(AnalysisRepository analysisRepository, DocumentService documentService, RunnerAnalysisService runnerAnalysisService, FrontAnalysisService frontAnalysisService) {
+    public AnalysisService(AnalysisRepository analysisRepository, DocumentService documentService, RunnerAnalysisService runnerAnalysisService, FrontAnalysisService frontAnalysisService, AnalysisTypeRepository analysisTypeRepository) {
         this.analysisRepository = analysisRepository;
         this.documentService = documentService;
         this.runnerAnalysisService = runnerAnalysisService;
         this.frontAnalysisService = frontAnalysisService;
+        this.analysisTypeRepository = analysisTypeRepository;
     }
 
     AnalysisModel processNewAnalysis(AnalysisDTO analysisDTO, String owner) {
@@ -103,6 +107,14 @@ public class AnalysisService {
 
     public void deleteAnalysis(String id, String owner) {
         analysisRepository.deleteByIdAndOwner(id, owner);
+    }
+
+    public List<AnalysisTypeModel> getAnalysisTypes() {
+        return analysisTypeRepository.findAll();
+    }
+
+    public void deleteAnalysisType(String id) {
+        analysisTypeRepository.deleteById(id);
     }
 
 }

@@ -52,6 +52,7 @@ public class AnalysisController {
         analysisService.deleteAnalysis(analysisId, principal.getName());
         return ResponseEntity.ok().build();
     }
+
     // ============== NON-API ==============
 
 }
