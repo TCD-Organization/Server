@@ -25,6 +25,7 @@ jobs:
 
   build-dev:
     needs: test
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     runs-on: tcd-server
     steps:
       - name: Stop previous Jee-server
