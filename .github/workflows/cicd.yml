@@ -50,7 +50,7 @@ jobs:
           TCD_MONGO_EXPRESS_ADMIN_PASSWORD: ${{ secrets.TCD_MONGO_EXPRESS_ADMIN_PASSWORD }}
           TCD_JEE_SERVER_PORT: ${{ secrets.TCD_JEE_SERVER_PORT }}
           TCD_JEE_SECURITY_TOKEN_SECRET: ${{ secrets.TCD_JEE_SECURITY_TOKEN_SECRET }}
-        run: docker-compose up -d jee-server
+        run: docker-compose up -d --build jee-server
 
   build-prod:
     needs: test
@@ -79,4 +79,4 @@ jobs:
           TCD_MONGO_EXPRESS_ADMIN_PASSWORD: ${{ secrets.TCD_MONGO_EXPRESS_ADMIN_PASSWORD }}
           TCD_JEE_SERVER_PORT: ${{ secrets.TCD_JEE_SERVER_PORT }}
           TCD_JEE_SECURITY_TOKEN_SECRET: ${{ secrets.TCD_JEE_SECURITY_TOKEN_SECRET }}
-        run: docker-compose up -d jee-server
+        run: docker-compose up -d --build jee-server
