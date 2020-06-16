@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
@@ -21,11 +21,19 @@ public class DocumentController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createDocument(@Valid @RequestBody DocumentDTO documentDTO,
-                                         @RequestParam(required = false, name = "file") MultipartFile file,
-                                                 Principal principal, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<String> createDocument(
+            @RequestParam("name") @NotEmpty String name,
+            @RequestParam("genre") @NotEmpty String genre,
+            @RequestParam("content_type") @NotEmpty String content_type,
+            @RequestParam("content") @NotEmpty String content,
+            @RequestParam(name = "file", required = false) MultipartFile mpFile,
+            Principal principal, UriComponentsBuilder uriBuilder)
+    {
+        DocumentDTO documentDTO = new DocumentDTO(name, genre, content_type, content);
 
-        //TODO: Do a Switch on Type of data between file or link and process
+        content = documentService.getDocumentContent(documentDTO, mpFile);
+        documentDTO.setContent(content);
+
         String newDocumentId = documentService.createDocument(documentDTO, principal.getName()).getId();
         URI location = uriBuilder.path("/document/{docId}").build(newDocumentId);
 
@@ -44,6 +52,6 @@ public class DocumentController {
         return ResponseEntity.ok(analysis);
     }
 
-    // ============== NON-API ==============
+        // ============== NON-API ==============
 
 }

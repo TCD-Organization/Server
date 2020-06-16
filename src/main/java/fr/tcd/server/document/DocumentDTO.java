@@ -1,10 +1,12 @@
 package fr.tcd.server.document;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 
 @Data
+@AllArgsConstructor
 public class DocumentDTO {
     @NotEmpty(message = "name must not be empty")
     private String name;

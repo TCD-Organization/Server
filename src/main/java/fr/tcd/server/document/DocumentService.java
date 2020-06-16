@@ -1,14 +1,24 @@
 package fr.tcd.server.document;
 
 import fr.tcd.server.document.exception.DocumentAlreadyExistsException;
+import fr.tcd.server.document.exception.DocumentContentNotRetrievedException;
 import fr.tcd.server.document.exception.DocumentNotCreatedException;
 import fr.tcd.server.document.exception.DocumentNotFoundException;
-import fr.tcd.server.user.UserRepository;
+import fr.tcd.server.utils.file_content.exception.FileNotSpecifiedException;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.tika.mime.MimeTypeException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+
+import static fr.tcd.server.utils.file.FileUtils.downloadMultiPartToFile;
+import static fr.tcd.server.utils.file_content.FileContentUtils.getContentFromFile;
+import static fr.tcd.server.utils.file_content.FileContentUtils.getContentFromLink;
 
 @Service
 public class DocumentService {
@@ -36,6 +46,32 @@ public class DocumentService {
         return Optional.of(documentRepository.save(documentModel)).orElseThrow(DocumentNotCreatedException::new);
     }
 
+    public String getDocumentContent(DocumentDTO documentDTO, @Nullable MultipartFile mpFile) {
+        String content = documentDTO.getContent();
+        String content_type = documentDTO.getContent_type();
+
+        try {
+            switch (content_type) {
+                case "link":
+                    content = getContentFromLink(content);
+
+                    break;
+                case "file":
+                    if (mpFile == null)
+                        throw new FileNotSpecifiedException();
+
+                    File file = downloadMultiPartToFile(mpFile);
+                    content = getContentFromFile(file);
+                    file.delete();
+                    break;
+                default:
+                    break;
+            }
+        } catch (IOException | MimeTypeException e) {
+            throw new DocumentContentNotRetrievedException(e);
+        }
+        return content;
+    }
 
     public List<DocumentModel> getMyDocuments(String name) {
         return documentRepository.findByOwner(name);

@@ -21,6 +21,8 @@
         <amqp.version>2.0.3.RELEASE</amqp.version>
         <commons.version>1.9</commons.version>
         <webflux.version>5.2.5.RELEASE</webflux.version>
+        <pdfbox.version>2.0.20</pdfbox.version>
+        <pdf2dom.version>1.6</pdf2dom.version>
     </properties>
 
     <dependencies>
@@ -70,6 +72,32 @@
             <groupId>io.projectreactor.netty</groupId>
             <artifactId>reactor-netty</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox-tools To load the PDF files-->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox-tools</artifactId>
+            <version>${pdfbox.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/net.sf.cssbox/pdf2dom Convertion for PDF-->
+        <dependency>
+            <groupId>net.sf.cssbox</groupId>
+            <artifactId>pdf2dom</artifactId>
+            <version>${pdf2dom.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient to download files -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.12</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.tika/tika-core -->
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>1.24.1</version>
+        </dependency>
+
+
 
 
 
