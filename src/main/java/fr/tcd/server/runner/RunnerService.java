@@ -8,7 +8,6 @@ import fr.tcd.server.runner.exception.RunnerNotUpdatedException;
 import fr.tcd.server.runner.status.RunnerStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 

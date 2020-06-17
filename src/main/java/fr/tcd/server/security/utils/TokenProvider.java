@@ -1,6 +1,5 @@
 package fr.tcd.server.security.utils;
 
-import fr.tcd.server.user.UserService;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
