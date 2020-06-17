@@ -16,12 +16,12 @@ public class AnalysisTypeController {
         this.analysisTypeService = analysisTypeService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<AnalysisTypeModel>> getAnalysisTypes() {
         return ResponseEntity.ok(analysisTypeService.getAnalysisTypes());
     }
 
-    @PutMapping
+    @PostMapping("/create")
     public ResponseEntity<String> createAnalysisType(@RequestParam("name") @NotEmpty String name) {
         String newAnalysisTypeId = analysisTypeService.createAnalysisType(name).getId();
         return ResponseEntity.ok(newAnalysisTypeId);

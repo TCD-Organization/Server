@@ -1,5 +1,7 @@
 package fr.tcd.server.analysis_type;
 
+import fr.tcd.server.analysis_type.exception.AnalysisTypeAlreadyExistsException;
+import fr.tcd.server.analysis_type.exception.AnalysisTypeNotCreatedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +21,9 @@ public class AnalysisTypeService {
     }
 
     public AnalysisTypeModel createAnalysisType(String name) {
+        if (analysisExistsByName(name)) {
+            throw new AnalysisTypeAlreadyExistsException();
+        }
         AnalysisTypeModel analysisType = new AnalysisTypeModel();
         analysisType.setName(name);
         return Optional.of(analysisTypeRepository.save(analysisType)).orElseThrow(AnalysisTypeNotCreatedException::new);
@@ -28,4 +33,7 @@ public class AnalysisTypeService {
         analysisTypeRepository.deleteById(id);
     }
 
+    public Boolean analysisExistsByName(String typeName) {
+        return analysisTypeRepository.existsByName(typeName);
+    }
 }

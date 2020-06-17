@@ -3,6 +3,7 @@ package fr.tcd.server.analysis_type;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="AnalysisTypes")
@@ -11,5 +12,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class AnalysisTypeModel {
     @Id
     private String id;
+    @Indexed(unique = true)
     private String name;
 }

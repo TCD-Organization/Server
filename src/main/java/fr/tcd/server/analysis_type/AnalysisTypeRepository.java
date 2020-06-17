@@ -8,6 +8,7 @@ import java.util.List;
 @Repository
 public interface AnalysisTypeRepository extends MongoRepository<AnalysisTypeModel, Long> {
     List<AnalysisTypeModel> findAll();
+    Boolean existsByName(String typeName);
     void deleteById(String id);
 }
 
