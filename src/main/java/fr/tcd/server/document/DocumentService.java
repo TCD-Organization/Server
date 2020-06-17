@@ -81,6 +81,10 @@ public class DocumentService {
         return documentRepository.findByIdAndOwner(id, owner).orElseThrow(DocumentNotFoundException::new);
     }
 
+    public void deleteDocument(String id, String owner) {
+        documentRepository.deleteByIdAndOwner(id, owner);
+    }
+
     private boolean documentAlreadyExists(String hash, String owner) {
         return documentRepository.existsByHashAndOwner(hash, owner);
     }

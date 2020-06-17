@@ -28,7 +28,7 @@ public class AnalysisTypeController {
     }
 
     @DeleteMapping("/{analysisTypeId}")
-    public ResponseEntity<List<AnalysisTypeModel>> deleteAnalysisType(@PathVariable("analysisTypeId") String analysisTypeId) {
+    public ResponseEntity<Void> deleteAnalysisType(@PathVariable("analysisTypeId") String analysisTypeId) {
         analysisTypeService.deleteAnalysisType(analysisTypeId);
         return ResponseEntity.ok().build();
     }
