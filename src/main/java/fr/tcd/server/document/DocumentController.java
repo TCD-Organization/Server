@@ -52,6 +52,13 @@ public class DocumentController {
         return ResponseEntity.ok(analysis);
     }
 
+
+    @DeleteMapping("/{documentId}")
+    public ResponseEntity<Void> deleteAnalysisType(@PathVariable("documentId") String documentId, Principal principal) {
+        documentService.deleteDocument(documentId, principal.getName());
+        return ResponseEntity.ok().build();
+    }
+
         // ============== NON-API ==============
 
 }
