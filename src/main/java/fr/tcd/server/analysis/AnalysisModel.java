@@ -1,6 +1,8 @@
 package fr.tcd.server.analysis;
 
+import fr.tcd.server.analysis.dto.AnalysisDTO;
 import fr.tcd.server.analysis.status.AnalysisStatus;
+import fr.tcd.server.document.DocumentModel;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
@@ -29,14 +31,13 @@ public class AnalysisModel {
     private Date end_time;
     private String result;
 
-    /*
-    public AnalysisDTO toDTO() {
-        AnalysisDTO analysisDTO = new AnalysisDTO();
-        analysisDTO.setName(name);
-        analysisDTO.setData(data);
-        analysisDTO.setOperation(operation);
-        analysisDTO.setOption(option);
-        return analysisDTO;
+    public AnalysisModel(AnalysisDTO analysisDTO, DocumentModel document) {
+        this.name = analysisDTO.getName();
+        this.type = analysisDTO.getType();
+        this.status = AnalysisStatus.TO_START;
+        this.document_id = document.getId();
+        this.document_name = document.getName();
+        this.owner = document.getOwner();
+        this.runner = null;
     }
-    */
 }

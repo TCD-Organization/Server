@@ -16,7 +16,7 @@ public class AnalysisProgressionDTO {
     // TODO: @ValidStatus cannot be different than total_steps if status is "FINISHED"
     // TODO: @ValidStatus cannot be total_steps or above if status is not "FINISHED"
     @NotNull(message = "step_number must not be null")
-    @Range(min = 0)
+    @Range(min = 1)
     private int step_number;
 
     // TODO: @ValidStatus cannot be below step_number

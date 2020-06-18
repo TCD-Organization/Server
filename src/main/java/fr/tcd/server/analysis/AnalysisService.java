@@ -8,7 +8,6 @@ import fr.tcd.server.analysis.exception.AnalysisAlreadyFinishedException;
 import fr.tcd.server.analysis.exception.AnalysisNotCreatedException;
 import fr.tcd.server.analysis.exception.AnalysisNotFoundException;
 import fr.tcd.server.analysis.exception.AnalysisNotUpdatedException;
-import fr.tcd.server.analysis.status.AnalysisStatus;
 import fr.tcd.server.analysis_type.AnalysisTypeService;
 import fr.tcd.server.analysis_type.exception.AnalysisTypeDoesNotExistException;
 import fr.tcd.server.document.DocumentModel;
@@ -39,11 +38,14 @@ public class AnalysisService {
         this.analysisTypeService = analysisTypeService;
     }
 
-    AnalysisModel processNewAnalysis(AnalysisDTO analysisDTO, String owner) {
+    AnalysisModel createNewAnalysis(AnalysisDTO analysisDTO, String owner) {
         //TODO: If there is any fail, roll back the creation
+        if(!analysisTypeService.analysisExistsByName(analysisDTO.getType())) {
+            throw new AnalysisTypeDoesNotExistException();
+        }
 
         DocumentModel document = documentService.getDocument(analysisDTO.getDoc_id(), owner);
-        AnalysisModel analysis = createAnalysis(analysisDTO, document.getId(), document.getName(), document.getOwner());
+        AnalysisModel analysis = new AnalysisModel(analysisDTO, document);
         AnalysisModel savedAnalysis = Optional.ofNullable(analysisRepository.save(analysis))
                 .orElseThrow(AnalysisNotCreatedException::new);
 
@@ -51,19 +53,6 @@ public class AnalysisService {
         frontAnalysisService.createQueueAndSendAnalysis(savedAnalysis);
 
         return savedAnalysis;
-    }
-
-    private AnalysisModel createAnalysis(AnalysisDTO analysisDTO, String doc_id, String doc_name, String owner) {
-        if(!analysisTypeService.analysisExistsByName(analysisDTO.getType())) {
-            throw new AnalysisTypeDoesNotExistException();
-        }
-        return new AnalysisModel()
-                .setName(analysisDTO.getName())
-                .setType(analysisDTO.getType())
-                .setStatus(AnalysisStatus.TO_START)
-                .setDocument_id(doc_id)
-                .setDocument_name(doc_name)
-                .setOwner(owner);
     }
 
     public AnalysisModel processAnalysisUpdate(AnalysisProgressionDTO analysisProgression, String analysisId, String runner) {

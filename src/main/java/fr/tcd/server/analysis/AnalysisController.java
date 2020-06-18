@@ -23,7 +23,7 @@ public class AnalysisController {
 
     @PostMapping
     public ResponseEntity<String> createAnalysis(@Valid @RequestBody AnalysisDTO analysisDTO, Principal principal, UriComponentsBuilder uriBuilder) {
-        String newAnalysisId = analysisService.processNewAnalysis(analysisDTO, principal.getName()).getId();
+        String newAnalysisId = analysisService.createNewAnalysis(analysisDTO, principal.getName()).getId();
         URI location = uriBuilder.path("/analysis/{analysisId}").build(newAnalysisId);
 
         return ResponseEntity.created(location).body(newAnalysisId);
