@@ -82,7 +82,7 @@ public class AnalysisService {
         if (analysisProgression.getStatus() == FINISHED) {
             analysis.setStep_number(analysisProgression.getTotal_steps());
             analysis.setEnd_time(new Date());
-            analysis.setLasting_time("0");
+            analysis.setLasting_time(0L);
             analysis.setResult(analysisProgression.getResult());
         }
 

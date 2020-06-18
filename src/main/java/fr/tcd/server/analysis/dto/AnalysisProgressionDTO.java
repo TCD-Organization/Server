@@ -28,7 +28,7 @@ public class AnalysisProgressionDTO {
     private String step_name;
 
     @NotEmpty(message = "lasting_time must not be empty")
-    private String lasting_time;
+    private Long lasting_time;
 
     // TODO: @ValidStatus cannot be empty if status is "FINISHED"
     private String result;
