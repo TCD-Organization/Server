@@ -3,7 +3,9 @@ package fr.tcd.server.analysis;
 import fr.tcd.server.analysis.dto.AnalysisDTO;
 import fr.tcd.server.analysis.status.AnalysisStatus;
 import fr.tcd.server.document.DocumentModel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,6 +15,8 @@ import java.util.Date;
 @Document(collection="Analysis")
 @Data
 @Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class AnalysisModel {
     @Id
     private String id;
@@ -38,6 +42,5 @@ public class AnalysisModel {
         this.document_id = document.getId();
         this.document_name = document.getName();
         this.owner = document.getOwner();
-        this.runner = null;
     }
 }

@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -30,9 +31,15 @@ public class JWTFilter extends GenericFilterBean {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String jwt = resolveToken(httpServletRequest);
-        if (hasText(jwt) && this.tokenProvider.validateToken(jwt)) {
+        if (hasText(jwt) && this.tokenProvider.validateToken(jwt, httpServletRequest)) {
             Authentication authentication = this.tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+
+        final String expired = (String) httpServletRequest.getAttribute("expired");
+        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+        if (expired!=null){
+            httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,expired);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);

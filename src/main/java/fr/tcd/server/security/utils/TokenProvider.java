@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
@@ -59,16 +60,19 @@ public class TokenProvider {
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
-    public boolean validateToken(String authToken) {
+    public boolean validateToken(String authToken, HttpServletRequest httpServletRequest) {
         try {
             decodeToken(authToken);
             return true;
 
-        } catch (JwtException | IllegalArgumentException e) {
-                System.out.println("Invalid JWT token.");
+        } catch (ExpiredJwtException e) {
+            System.out.println("Expired JWT Token");
+            httpServletRequest.setAttribute("expired",e.getMessage());
 
-            return false;
+        } catch (JwtException | IllegalArgumentException e) {
+            System.out.println("Invalid JWT token.");
         }
+        return false;
     }
 
     private Jws<Claims> decodeToken(String authToken) {
