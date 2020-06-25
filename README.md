@@ -18,7 +18,7 @@ docker-compose up -d
 ```
 
 Note: This project will launch a RabbitMQ Broker, a Mongo Server, a Mongo-Express Web interface and a Spring Boot server.
-To change the ports, please add a .env file at the root of folder specifying the ports :
+To change the ports and custom variables, please add a .env file at the root of folder specifying the variables to override, or export them directly :
 ```
 TCD_MONGO_HOST=127.0.0.1
 TCD_MONGO_PORT=27017
