@@ -3,7 +3,7 @@ version: '3'
 services:
   mongo:
     image: mongo
-    container_name: 'tcd-mongo'
+    container_name: 'tcd-mongo-${VERSION}'
     restart: always
     volumes:
       - "${TCD_MONGO_DATA_PATH:-./mongoData}:/data/db"
