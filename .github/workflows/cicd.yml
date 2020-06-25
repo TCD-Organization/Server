@@ -26,7 +26,7 @@ jobs:
   build-dev:
     needs: test
     if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
-    runs-on: dev
+    runs-on: tcd-server
     steps:
       - name: Stop previous Jee-server
         run:  docker-compose down jee-server || echo "No jee-server to stop"
@@ -55,7 +55,7 @@ jobs:
   build-prod:
     needs: test
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    runs-on: prod
+    runs-on: tcd-server
     steps:
       - name: Stop previous Jee-server
         run:  docker-compose down jee-server echo "No jee-server to stop"
