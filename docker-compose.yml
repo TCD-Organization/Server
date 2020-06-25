@@ -13,7 +13,6 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${TCD_MONGO_ROOT_USERNAME:-admin}
       - MONGO_INITDB_ROOT_PASSWORD=${TCD_MONGO_ROOT_PASSWORD:-admin}
 
-
   mongo-express:
     image: mongo-express
     container_name: 'tcd-mongo-express'
