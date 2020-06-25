@@ -26,7 +26,7 @@ jobs:
   build-dev:
     needs: test
     if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
-    runs-on: tcd-server
+    runs-on: dev
     steps:
       - name: Stop previous Jee-server
         run:  docker-compose down jee-server || echo "No jee-server to stop"
@@ -50,12 +50,12 @@ jobs:
           TCD_MONGO_EXPRESS_ADMIN_PASSWORD: ${{ secrets.TCD_MONGO_EXPRESS_ADMIN_PASSWORD }}
           TCD_JEE_SERVER_PORT: ${{ secrets.TCD_JEE_SERVER_PORT }}
           TCD_JEE_SECURITY_TOKEN_SECRET: ${{ secrets.TCD_JEE_SECURITY_TOKEN_SECRET }}
-        run: docker-compose up -d --build jee-server
+        run: docker-compose up -e VERSION=dev -d --build jee-server
 
   build-prod:
     needs: test
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    runs-on: tcd-server
+    runs-on: prod
     steps:
       - name: Stop previous Jee-server
         run:  docker-compose down jee-server echo "No jee-server to stop"
@@ -79,4 +79,4 @@ jobs:
           TCD_MONGO_EXPRESS_ADMIN_PASSWORD: ${{ secrets.TCD_MONGO_EXPRESS_ADMIN_PASSWORD }}
           TCD_JEE_SERVER_PORT: ${{ secrets.TCD_JEE_SERVER_PORT }}
           TCD_JEE_SECURITY_TOKEN_SECRET: ${{ secrets.TCD_JEE_SECURITY_TOKEN_SECRET }}
-        run: docker-compose up -d --build jee-server
+        run: docker-compose up -e VERSION=prod -d --build jee-server
