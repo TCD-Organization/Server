@@ -33,7 +33,7 @@ services:
       - "${TCD_RABBITMQ_MANAGEMENT_PORT:-5672}:5672"
       - "${TCD_RABBITMQ_BROKER_PORT:-15672}:15672"
     volumes:
-      - "${TCD_RABBITMQ_BROKER_DATA_PATH:-./dataRabbitMQ${VERSION:-default}}:/var/lib/rabbitmq/mnesia/"
+      - "${TCD_RABBITMQ_BROKER_DATA_PATH:-./dataRabbitMQ}-${VERSION:-default}:/var/lib/rabbitmq/mnesia/"
 
   jee-server:
     build: .
@@ -45,7 +45,7 @@ services:
       - DB_AUTHENTICATION_DATABASE=${TCD_MONGO_AUTHENTICATION_DATABASE:-admin}
       - DB_USERNAME=${TCD_MONGO_ROOT_USERNAME:-admin}
       - DB_PASSWORD=${TCD_MONGO_ROOT_PASSWORD:-admin}
-      - DB_NAME=${TCD_MONGO_DATABASE_NAME:-database-${VERSION:-default}}
+      - DB_NAME=${TCD_MONGO_DATABASE_NAME:-database}-${VERSION:-default}
       - DB_PORT=${TCD_MONGO_PORT:-27017}
       - DB_HOST=${TCD_MONGO_HOST:-mongo}
       - BROKER_HOST=${TCD_RABBITMQ_BROKER_HOST:-rabbitmq}
