@@ -28,24 +28,24 @@ services:
   rabbitmq:
     hostname: 'tcdrabbit'
     image: 'rabbitmq:3.6-management-alpine'
-    container_name: 'tcd-rabbitmq'
+    container_name: 'tcd-rabbitmq-${VERSION:-default}'
     ports:
       - "${TCD_RABBITMQ_MANAGEMENT_PORT:-5672}:5672"
       - "${TCD_RABBITMQ_BROKER_PORT:-15672}:15672"
     volumes:
-      - "${TCD_RABBITMQ_BROKER_DATA_PATH:-./dataRabbitMQ}:/var/lib/rabbitmq/mnesia/"
+      - "${TCD_RABBITMQ_BROKER_DATA_PATH:-./dataRabbitMQ${VERSION:-default}}:/var/lib/rabbitmq/mnesia/"
 
   jee-server:
     build: .
-    image: 'tcd-jee-server:${VERSION}'
-    container_name: 'tcd-jee-server'
+    image: 'tcd-jee-server:${VERSION:-default}'
+    container_name: 'tcd-jee-server-${VERSION:-default}'
     ports:
       - "${TCD_JEE_SERVER_PORT:-8080}:8080"
     environment:
       - DB_AUTHENTICATION_DATABASE=${TCD_MONGO_AUTHENTICATION_DATABASE:-admin}
       - DB_USERNAME=${TCD_MONGO_ROOT_USERNAME:-admin}
       - DB_PASSWORD=${TCD_MONGO_ROOT_PASSWORD:-admin}
-      - DB_NAME=${TCD_MONGO_DATABASE_NAME:-database}
+      - DB_NAME=${TCD_MONGO_DATABASE_NAME:-database-${VERSION:-default}}
       - DB_PORT=${TCD_MONGO_PORT:-27017}
       - DB_HOST=${TCD_MONGO_HOST:-mongo}
       - BROKER_HOST=${TCD_RABBITMQ_BROKER_HOST:-rabbitmq}
