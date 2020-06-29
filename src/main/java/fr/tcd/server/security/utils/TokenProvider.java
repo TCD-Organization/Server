@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class TokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
-    private final long tokenValidityInMilliseconds = Duration.ofMinutes(5).getSeconds() * 1000;
+    private final long tokenValidityInMilliseconds = Duration.ofHours(48).getSeconds() * 1000;
     private final byte[] secret;
 
     public TokenProvider(@Value("${security.token.secret}") CharSequence secret) {
