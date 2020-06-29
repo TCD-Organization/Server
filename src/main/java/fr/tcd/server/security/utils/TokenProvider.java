@@ -8,7 +8,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +21,6 @@ public class TokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
     private static final String ID_KEY = "id";
-    private final long tokenValidityInMilliseconds = Duration.ofMinutes(5).getSeconds() * 1000;
     private final long tokenValidityInMilliseconds = Duration.ofHours(48).getSeconds() * 1000;
     private final byte[] secret;
 
