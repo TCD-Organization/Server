@@ -9,6 +9,8 @@ import fr.tcd.server.runner.status.RunnerStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,8 +28,17 @@ public class RunnerService {
         if (runnerAlreadyExists(runnerDTO.getRunnername())) {
             throw new RunnerAlreadyExistsException();
         }
-
-        RunnerModel runner = runnerDTO.toRunnerModel(passwordEncoder);
+        List<String> roles = new ArrayList<>();
+        roles.add("RUNNER");
+        String key = passwordEncoder.encode(runnerDTO.getKey());
+        RunnerModel runner =  new RunnerModel(null,
+                runnerDTO.getRunnername(),
+                key,
+                roles,
+                RunnerStatus.DOWN,
+                runnerDTO.getIp(),
+                runnerDTO.getPort()
+                );
 
         return Optional.of(runnerRepository.save(runner)).orElseThrow(RunnerNotCreatedException::new);
     }

@@ -2,7 +2,11 @@ package fr.tcd.server.analysis;
 
 import fr.tcd.server.analysis.dto.AnalysisDTO;
 import fr.tcd.server.analysis.dto.AnalysisProgressionDTO;
+import fr.tcd.server.user.SecurityUser;
+import fr.tcd.server.user.UserDomain;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 

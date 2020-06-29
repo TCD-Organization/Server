@@ -1,5 +1,6 @@
 package fr.tcd.server.security.utils;
 
+import fr.tcd.server.user.SecurityUser;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,9 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -22,6 +21,7 @@ import java.util.stream.Collectors;
 public class TokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
+    private static final String ID_KEY = "id";
     private final long tokenValidityInMilliseconds = Duration.ofMinutes(5).getSeconds() * 1000;
     private final byte[] secret;
 
@@ -29,8 +29,32 @@ public class TokenProvider {
         this.secret = secret.toString().getBytes();
     }
 
+    public String generateToken(SecurityUser user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", user.getId());
+
+        String authorities = user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        claims.put(AUTHORITIES_KEY, authorities);
+        return createToken(claims, user.getUsername());
+    }
+
+    private String createToken(Map<String, Object> claims, String subject) {
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + this.tokenValidityInMilliseconds);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS256, secret).compact();
+    }
+    // TODO : Replace with P content (discord)
     // Generates a token when login route is called
-    public String createToken(Authentication authentication) {
+    /*public String createToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.joining(","));
@@ -44,19 +68,18 @@ public class TokenProvider {
             .signWith(SignatureAlgorithm.HS512, secret)
             .setExpiration(validity)
             .compact();
-    }
+    }*/
 
     // Generates Spring Security Authentication token when filtering requests
     public Authentication getAuthentication(String token) {
         Claims claims = decodeToken(token).getBody();
 
         Collection<? extends GrantedAuthority> authorities =
-            Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
 
-        User principal = new User(claims.getSubject(), "", authorities);
-
+        SecurityUser principal = new SecurityUser(claims.get(ID_KEY).toString(), claims.getSubject(), "", authorities);
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
