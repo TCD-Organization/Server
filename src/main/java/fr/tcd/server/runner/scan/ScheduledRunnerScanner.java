@@ -34,7 +34,7 @@ public class ScheduledRunnerScanner {
         String url = "http://" + runner.getIp() + ":" + runner.getPort() + "/ping";
         ResponseEntity<String> response = webClientBean.sendGetRequest(url);
         if(!response.getStatusCode().equals(HttpStatus.OK)) {
-            runner.setStatus(RunnerStatus.DOWN);
+            runner.status(RunnerStatus.DOWN);
             // TODO: Stop all analyses by this runner
             runnerRepository.save(runner);
         }

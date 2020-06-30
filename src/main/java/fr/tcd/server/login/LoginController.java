@@ -1,11 +1,9 @@
 package fr.tcd.server.login;
 
-import fr.tcd.server.security.utils.TokenProvider;
+import fr.tcd.server.runner.RunnerService;
+import fr.tcd.server.runner.dto.RunnerConnectDTO;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,23 +15,31 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RequestMapping("/login")
 public class LoginController {
 
-    private final TokenProvider tokenProvider;
-    private final AuthenticationManagerBuilder authenticationManager;
+    private final LoginService loginService;
+    private final RunnerService runnerService;
 
-    public LoginController(TokenProvider tokenProvider,
-                           AuthenticationManagerBuilder authenticationManager) {
-        this.tokenProvider = tokenProvider;
-        this.authenticationManager = authenticationManager;
+    public LoginController(LoginService loginService, RunnerService runnerService) {
+        this.loginService = loginService;
+        this.runnerService = runnerService;
     }
 
     @PostMapping
     public ResponseEntity<Void> loginUser(@RequestBody LoginDTO loginDTO) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
-        Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
-        String token = tokenProvider.createToken(authentication);
+        final String jwtToken = loginService.connectUser(loginDTO.getUsername(), loginDTO.getPassword());
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(AUTHORIZATION, "Bearer " + token);
+        httpHeaders.add(AUTHORIZATION, "Bearer " + jwtToken);
+        return ResponseEntity.ok().headers(httpHeaders).build();
+    }
+
+    @PostMapping("/runner")
+    public ResponseEntity<Void> connectRunner(@RequestBody RunnerConnectDTO runnerConnectDTO) {
+        final String jwtToken = loginService.connectUser(runnerConnectDTO.getRunnername(), runnerConnectDTO.getKey());
+
+        runnerService.runnerUp(runnerConnectDTO.getRunnername());
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(AUTHORIZATION, "Bearer " + jwtToken);
         return ResponseEntity.ok().headers(httpHeaders).build();
     }
 
