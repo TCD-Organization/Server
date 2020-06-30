@@ -45,7 +45,7 @@ public class RunnerService {
 
     public void runnerUp(String runnername) {
         RunnerModel runner = runnerRepository.findByRunnername(runnername).orElseThrow(RunnerNotFoundException::new);
-        runner.setStatus(RunnerStatus.UP);
+        runner.status(RunnerStatus.UP);
         Optional.ofNullable(runnerRepository.save(runner)).orElseThrow(RunnerNotUpdatedException::new);
     }
 

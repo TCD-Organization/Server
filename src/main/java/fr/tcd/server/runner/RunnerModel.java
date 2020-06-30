@@ -46,18 +46,8 @@ public class RunnerModel implements UserDomain {
     }
 
     @Override
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
     public String getUsername() {
         return runnername;
-    }
-
-    @Override
-    public void setUsername(String runnername) {
-        this.runnername = runnername;
     }
 
     @Override
@@ -66,33 +56,11 @@ public class RunnerModel implements UserDomain {
     }
 
     @Override
-    public void setPassword(String key) {
-        this.key = key;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    @Override
     public List<String> getRoles() {
         return roles;
     }
 
-    @Override
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
-    }
-
-    public RunnerStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(RunnerStatus status) {
+    public void status(RunnerStatus status) {
         this.status = status;
     }
 
@@ -100,15 +68,7 @@ public class RunnerModel implements UserDomain {
         return ip;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
     public String getPort() {
         return port;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
     }
 }

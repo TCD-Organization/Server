@@ -24,7 +24,7 @@ public class UserService {
             throw new UserAlreadyExistsException();
         }
         String password = passwordEncoder.encode(userDTO.getPassword());
-        UserModel userModel = new UserModel(userDTO.getUsername(), password, userDTO.getEmail());
+        UserModel userModel = userDTO.toUserModel(password);
 
         return Optional.of(userRepository.save(userModel)).orElseThrow(UserNotCreatedException::new);
     }
