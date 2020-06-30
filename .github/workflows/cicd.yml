@@ -58,7 +58,7 @@ jobs:
     runs-on: tcd-server
     steps:
       - name: Stop previous Jee-server
-        run:  docker-compose down jee-server-prod echo "No jee-server to stop"
+        run:  docker-compose down jee-server-prod || echo "No jee-server to stop"
 
       - name: Launch new Jee-server
         env:
@@ -80,4 +80,4 @@ jobs:
           TCD_JEE_SERVER_PORT: ${{ secrets.TCD_JEE_SERVER_PROD_PORT }}
           TCD_JEE_SECURITY_TOKEN_SECRET: ${{ secrets.TCD_JEE_SECURITY_TOKEN_SECRET }}
           VERSION: "prod"
-        run: docker-compose up -d --build jee-server
+        run: docker-compose up -d --build tcd-jee-server-prod

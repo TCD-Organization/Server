@@ -57,7 +57,7 @@ services:
 
     jee-server-prod:
       build: .
-      image: 'tcd-jee-server-prod'
+      image: 'tcd-jee-server:prod'
       container_name: 'tcd-jee-server-prod'
       restart: always
       ports:
