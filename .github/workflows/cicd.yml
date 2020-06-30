@@ -29,7 +29,7 @@ jobs:
     runs-on: tcd-server
     steps:
       - name: Stop previous Jee-server
-        run:  docker-compose down jee-server || echo "No jee-server to stop"
+        run:  docker-compose down jee-server || echo "No jee-server $VERSION to stop"
 
       - name: Launch new Jee-server
         env:
@@ -59,7 +59,7 @@ jobs:
     runs-on: tcd-server
     steps:
       - name: Stop previous Jee-server
-        run:  docker-compose down jee-server echo "No jee-server to stop"
+        run:  docker-compose down jee-server || echo "No jee-server $VERSION to stop"
 
       - name: Launch new Jee-server
         env:
