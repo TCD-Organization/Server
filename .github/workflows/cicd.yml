@@ -29,7 +29,7 @@ jobs:
     runs-on: tcd-server
     steps:
       - name: Stop previous Jee-server
-        run:  docker-compose down jee-server-dev || echo "No jee-server to stop"
+        run:  docker-compose down jee-server-dev || echo "No jee-server-dev to stop"
 
       - name: Launch new Jee-server
         env:
@@ -58,7 +58,7 @@ jobs:
     runs-on: tcd-server
     steps:
       - name: Stop previous Jee-server
-        run:  docker-compose down jee-server-prod || echo "No jee-server to stop"
+        run:  docker-compose down jee-server-prod || echo "No jee-server-prod to stop"
 
       - name: Launch new Jee-server
         env:
@@ -79,5 +79,4 @@ jobs:
           TCD_MONGO_EXPRESS_ADMIN_PASSWORD: ${{ secrets.TCD_MONGO_EXPRESS_ADMIN_PASSWORD }}
           TCD_JEE_SERVER_PORT: ${{ secrets.TCD_JEE_SERVER_PROD_PORT }}
           TCD_JEE_SECURITY_TOKEN_SECRET: ${{ secrets.TCD_JEE_SECURITY_TOKEN_SECRET }}
-          VERSION: "prod"
-        run: docker-compose up -d --build tcd-jee-server-prod
+        run: docker-compose up -d --build jee-server-prod
