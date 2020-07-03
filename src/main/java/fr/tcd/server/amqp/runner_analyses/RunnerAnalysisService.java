@@ -19,12 +19,10 @@ public class RunnerAnalysisService {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void formAndSendRunnerAnalysis(DocumentModel document, AnalysisModel analysis) {
+    public void formAndSendRunnerAnalysis(String content, String analysisId) {
         RunnerAnalysisDTO runnerAnalysisDTO = new RunnerAnalysisDTO()
-                .setId(analysis.getDocument_id())
-                .setGenre(document.getGenre())
-                .setContent(document.getContent())
-                .setAnalysis(analysis);
+                .setContent(content)
+                .setAnalysis_id(analysisId);
         try {
             rabbitTemplate.convertAndSend(RunnerAnalysesAmqpConfig.EXCHANGE, NEW_RUNNER_ANALYSIS_ROOTING_KEY, runnerAnalysisDTO);
         } catch (AmqpException e) {

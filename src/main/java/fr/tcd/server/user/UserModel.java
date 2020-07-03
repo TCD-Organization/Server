@@ -22,14 +22,11 @@ public class UserModel implements UserDomain {
 
     private String password;
 
-    private String email;
-
     private List<String> roles;
 
-    public UserModel(String username, String password, String email, List<String> roles) {
+    public UserModel(String username, String password, List<String> roles) {
         this.username = username;
         this.password = password;
-        this.email = email;
         this.roles = roles;
     }
 
@@ -43,10 +40,6 @@ public class UserModel implements UserDomain {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public List<String> getRoles() {

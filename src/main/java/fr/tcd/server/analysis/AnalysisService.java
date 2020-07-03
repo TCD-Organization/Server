@@ -8,8 +8,6 @@ import fr.tcd.server.analysis.exception.AnalysisAlreadyFinishedException;
 import fr.tcd.server.analysis.exception.AnalysisNotCreatedException;
 import fr.tcd.server.analysis.exception.AnalysisNotFoundException;
 import fr.tcd.server.analysis.exception.AnalysisNotUpdatedException;
-import fr.tcd.server.analysis_type.AnalysisTypeService;
-import fr.tcd.server.analysis_type.exception.AnalysisTypeDoesNotExistException;
 import fr.tcd.server.document.DocumentModel;
 import fr.tcd.server.document.DocumentService;
 import org.springframework.stereotype.Service;
@@ -28,28 +26,21 @@ public class AnalysisService {
     private final DocumentService documentService;
     private final RunnerAnalysisService runnerAnalysisService;
     private final FrontAnalysisService frontAnalysisService;
-    private final AnalysisTypeService analysisTypeService;
 
-    public AnalysisService(AnalysisRepository analysisRepository, DocumentService documentService, RunnerAnalysisService runnerAnalysisService, FrontAnalysisService frontAnalysisService, AnalysisTypeService analysisTypeService) {
+    public AnalysisService(AnalysisRepository analysisRepository, DocumentService documentService, RunnerAnalysisService runnerAnalysisService, FrontAnalysisService frontAnalysisService) {
         this.analysisRepository = analysisRepository;
         this.documentService = documentService;
         this.runnerAnalysisService = runnerAnalysisService;
         this.frontAnalysisService = frontAnalysisService;
-        this.analysisTypeService = analysisTypeService;
     }
 
     AnalysisModel createNewAnalysis(AnalysisDTO analysisDTO, String owner) {
-        //TODO: If there is any fail, roll back the creation
-        if(!analysisTypeService.analysisExistsByName(analysisDTO.getType())) {
-            throw new AnalysisTypeDoesNotExistException();
-        }
-
         DocumentModel document = documentService.getDocument(analysisDTO.getDoc_id(), owner);
         AnalysisModel analysis = new AnalysisModel(analysisDTO, document);
         AnalysisModel savedAnalysis = Optional.ofNullable(analysisRepository.save(analysis))
                 .orElseThrow(AnalysisNotCreatedException::new);
 
-        runnerAnalysisService.formAndSendRunnerAnalysis(document, savedAnalysis);
+        runnerAnalysisService.formAndSendRunnerAnalysis(document.getContent(), savedAnalysis.getId());
         frontAnalysisService.createQueueAndSendAnalysis(savedAnalysis);
 
         return savedAnalysis;

@@ -7,6 +7,6 @@ import java.util.List;
 public class AdminDTO extends IUserDTO {
     @Override
     public UserModel toUserModel(String password) {
-        return new UserModel(this.getUsername(), password, this.getEmail(), List.of("USER", "ADMIN"));
+        return new UserModel(this.getUsername(), password, List.of("USER", "ADMIN"));
     }
 }
