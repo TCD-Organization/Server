@@ -51,25 +51,7 @@ public class TokenProvider {
                 .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS256, secret).compact();
     }
-    // TODO : Replace with P content (discord)
-    // Generates a token when login route is called
-    /*public String createToken(Authentication authentication) {
-        String authorities = authentication.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.joining(","));
 
-        long now = (new Date()).getTime();
-        Date validity = new Date(now + this.tokenValidityInMilliseconds);
-
-        return Jwts.builder()
-            .setSubject(authentication.getName())
-            .claim(AUTHORITIES_KEY, authorities)
-            .signWith(SignatureAlgorithm.HS512, secret)
-            .setExpiration(validity)
-            .compact();
-    }*/
-
-    // Generates Spring Security Authentication token when filtering requests
     public Authentication getAuthentication(String token) {
         Claims claims = decodeToken(token).getBody();
 

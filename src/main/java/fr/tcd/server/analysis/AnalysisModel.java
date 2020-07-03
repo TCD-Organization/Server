@@ -37,7 +37,6 @@ public class AnalysisModel {
 
     public AnalysisModel(AnalysisDTO analysisDTO, DocumentModel document) {
         this.name = analysisDTO.getName();
-        this.type = analysisDTO.getType();
         this.status = AnalysisStatus.TO_START;
         this.document_id = document.getId();
         this.document_name = document.getName();
