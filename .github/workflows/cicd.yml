@@ -29,7 +29,7 @@ jobs:
     runs-on: tcd-server
     steps:
       - name: Stop previous Jee-server
-        run:  docker-compose down jee-server-dev || echo "No jee-server-dev to stop"
+        run:  docker-compose rm -f -s -v jee-server-dev || echo "No jee-server-dev to stop"
 
       - name: Launch new Jee-server
         env:
@@ -58,7 +58,7 @@ jobs:
     runs-on: tcd-server
     steps:
       - name: Stop previous Jee-server
-        run:  docker-compose down jee-server-prod || echo "No jee-server-prod to stop"
+        run:  docker-compose rm -f -s -v jee-server-prod || echo "No jee-server-prod to stop"
 
       - name: Launch new Jee-server
         env:
