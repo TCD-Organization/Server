@@ -89,8 +89,8 @@ public class AnalysisService {
         return analysis;
     }
 
-    public List<AnalysisModel> getMyAnalyses(String name) {
-        return analysisRepository.findByOwner(name);
+    public List<AnalysisModel> getMyAnalyses(String owner) {
+        return analysisRepository.findByOwner(owner);
     }
 
     public AnalysisModel getAnalysis(String id, String owner) {

@@ -20,13 +20,4 @@ public class RunnerDTO {
 
     @NotEmpty(message = "port must not be empty")
     private String port;
-
-    public RunnerModel toRunnerModel(PasswordEncoder passwordEncoder) {
-        return new RunnerModel()
-                .setRunnername(this.getRunnername())
-                .setKey(passwordEncoder.encode(this.getKey()))
-                .setStatus(RunnerStatus.DOWN)
-                .setIp(ip)
-                .setPort(port);
-    }
 }
