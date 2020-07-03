@@ -40,7 +40,7 @@ public class AnalysisService {
         AnalysisModel savedAnalysis = Optional.ofNullable(analysisRepository.save(analysis))
                 .orElseThrow(AnalysisNotCreatedException::new);
 
-        runnerAnalysisService.formAndSendRunnerAnalysis(document, savedAnalysis);
+        runnerAnalysisService.formAndSendRunnerAnalysis(document.getContent(), savedAnalysis.getId());
         frontAnalysisService.createQueueAndSendAnalysis(savedAnalysis);
 
         return savedAnalysis;

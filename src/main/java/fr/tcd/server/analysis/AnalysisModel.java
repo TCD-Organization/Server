@@ -21,7 +21,6 @@ public class AnalysisModel {
     @Id
     private String id;
     private String name;
-    private String type;
     private AnalysisStatus status;
     private String document_id;
     private String document_name;
