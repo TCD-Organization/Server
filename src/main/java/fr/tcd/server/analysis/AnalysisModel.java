@@ -21,7 +21,6 @@ public class AnalysisModel {
     @Id
     private String id;
     private String name;
-    private String type;
     private AnalysisStatus status;
     private String document_id;
     private String document_name;
@@ -37,7 +36,6 @@ public class AnalysisModel {
 
     public AnalysisModel(AnalysisDTO analysisDTO, DocumentModel document) {
         this.name = analysisDTO.getName();
-        this.type = analysisDTO.getType();
         this.status = AnalysisStatus.TO_START;
         this.document_id = document.getId();
         this.document_name = document.getName();
