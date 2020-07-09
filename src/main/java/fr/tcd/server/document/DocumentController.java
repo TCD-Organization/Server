@@ -47,9 +47,15 @@ public class DocumentController {
     }
 
     @GetMapping("/{documentId}")
-    public ResponseEntity<DocumentModel> getAnalysis(@PathVariable("documentId") String documentId, Principal principal) {
+    public ResponseEntity<DocumentModel> getDocument(@PathVariable("documentId") String documentId, Principal principal) {
         DocumentModel analysis = documentService.getDocument(documentId, principal.getName());
         return ResponseEntity.ok(analysis);
+    }
+
+    @DeleteMapping("/{documentId}")
+    public ResponseEntity<DocumentModel> deleteDocument(@PathVariable("documentId") String documentId, Principal principal) {
+        documentService.deleteDocument(documentId, principal.getName());
+        return ResponseEntity.ok().build();
     }
 
         // ============== NON-API ==============
