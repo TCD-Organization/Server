@@ -1,6 +1,8 @@
 package fr.tcd.server.analysis;
 
 import fr.tcd.server.analysis.dto.AnalysisDTO;
+import fr.tcd.server.analysis.exception.AnalysisAlreadyFinishedException;
+import fr.tcd.server.analysis.exception.AnalysisProgressionFieldsInvalidException;
 import fr.tcd.server.analysis.status.AnalysisStatus;
 import fr.tcd.server.document.DocumentModel;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+
+import static fr.tcd.server.analysis.status.AnalysisStatus.FINISHED;
+import static fr.tcd.server.analysis.status.AnalysisStatus.TO_START;
 
 @Document(collection="Analysis")
 @Data
@@ -36,9 +41,50 @@ public class AnalysisModel {
 
     public AnalysisModel(AnalysisDTO analysisDTO, DocumentModel document) {
         this.name = analysisDTO.getName();
-        this.status = AnalysisStatus.TO_START;
+        this.status = TO_START;
         this.document_id = document.getId();
         this.document_name = document.getName();
         this.owner = document.getOwner();
+    }
+
+    public void updateProgress(AnalysisStatus status, String runner, int stepNumber, int totalSteps, String stepName,
+                               Long lastingTime, String result) {
+        updateIsValid(status, stepNumber, totalSteps, result);
+
+        if (this.status == FINISHED) {
+            throw new AnalysisAlreadyFinishedException();
+        }
+
+        if (this.status == TO_START) {
+            this.start_time = new Date();
+        }
+
+        this.status = status;
+        this.runner = runner;
+        this.step_number = stepNumber;
+        this.total_steps = totalSteps;
+        this.step_name = stepName;
+        this.lasting_time = lastingTime;
+
+        if (status == FINISHED) {
+            this.step_number = totalSteps;
+            this.end_time = new Date();
+            this.lasting_time = 0L;
+            this.result = result;
+        }
+    }
+
+    private void updateIsValid(AnalysisStatus status, int stepNumber, int totalSteps, String result) {
+        if ((result == null || result.isEmpty()) && status == FINISHED) {
+            throw new AnalysisProgressionFieldsInvalidException("Cannot have status FINISHED and result empty");
+        }
+
+        if(stepNumber <= this.step_number) {
+            throw new AnalysisProgressionFieldsInvalidException("stepNumber cannot be same or lower than previous step number");
+        }
+
+        if (stepNumber == totalSteps && status != FINISHED) {
+            throw new AnalysisProgressionFieldsInvalidException("StepNumber cannot equal totalSteps when status is not FINISHED");
+        }
     }
 }

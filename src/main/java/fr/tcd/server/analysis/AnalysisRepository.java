@@ -12,6 +12,7 @@ public interface AnalysisRepository extends MongoRepository<AnalysisModel, Long>
     Optional<AnalysisModel> findById(String id);
     List<AnalysisModel> findByOwner(String owner);
     void deleteByIdAndOwner(String id, String owner);
+    boolean existsByIdAndOwner(String id, String owner);
 }
 
 

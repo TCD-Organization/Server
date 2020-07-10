@@ -49,7 +49,14 @@ public class AnalysisController {
 
     @PutMapping("/{analysisId}/progress")
     public ResponseEntity<String> updateAnalysisProgression(@PathVariable("analysisId") String analysisId, @Valid @RequestBody AnalysisProgressionDTO analysisProgression, Principal principal) {
-        AnalysisModel analysis = analysisService.processAnalysisUpdate(analysisProgression, analysisId, principal.getName());
+        AnalysisModel analysis = analysisService.processAnalysisUpdate(analysisId,
+                analysisProgression.getStatus(),
+                principal.getName(),
+                analysisProgression.getStep_number(),
+                analysisProgression.getTotal_steps(),
+                analysisProgression.getStep_name(),
+                analysisProgression.getLasting_time(),
+                analysisProgression.getResult());
         return ResponseEntity.ok(analysis.getId());
     }
 

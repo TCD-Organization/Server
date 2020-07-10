@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import static fr.tcd.server.document.DocumentContentType.LINK;
 import static fr.tcd.server.utils.file.FileUtils.downloadMultiPartToFile;
 import static fr.tcd.server.utils.file_content.FileContentUtils.getContentFromFile;
 import static fr.tcd.server.utils.file_content.FileContentUtils.getContentFromLink;
@@ -29,34 +30,39 @@ public class DocumentService {
         this.documentRepository = documentRepository;
     }
 
-    public DocumentModel createDocument(DocumentDTO documentDTO, String owner) {
-        String hash = hashText(documentDTO.getContent());
+    public DocumentModel createDocument(String name, String genre, String content, String owner) {
+        content = cleanContent(content);
+        String hash = hashText(content);
         if (documentAlreadyExists(hash, owner)) {
             throw new DocumentAlreadyExistsException();
         }
 
-            DocumentModel documentModel = new DocumentModel()
-                    .setName(documentDTO.getName())
-                    .setHash(hash)
-                    .setGenre(documentDTO.getGenre())
-                    .setContent(documentDTO.getContent())
-                    //.setSize(size)
-                    .setOwner(owner);
+        DocumentModel documentModel = new DocumentModel()
+                .setName(name)
+                .setHash(hash)
+                .setGenre(genre)
+                .setContent(content)
+                .setOwner(owner);
 
         return Optional.of(documentRepository.save(documentModel)).orElseThrow(DocumentNotCreatedException::new);
     }
 
-    public String getDocumentContent(DocumentDTO documentDTO, @Nullable MultipartFile mpFile) {
-        String content = documentDTO.getContent();
-        String content_type = documentDTO.getContent_type();
+    private String cleanContent(String content) {
+        return content.trim()
+                .replaceAll(" +", " ")
+                .replaceAll("\\n", "")
+                .replaceAll("\\t", "")
+                .replaceAll("\\r", "");
+    }
 
+    public String getDocumentContent(String content, DocumentContentType contentType, @Nullable MultipartFile mpFile) {
         try {
-            switch (content_type) {
-                case "link":
+            switch (contentType) {
+                case LINK:
                     content = getContentFromLink(content);
 
                     break;
-                case "file":
+                case FILE:
                     if (mpFile == null)
                         throw new FileNotSpecifiedException();
 
@@ -82,11 +88,19 @@ public class DocumentService {
     }
 
     public void deleteDocument(String id, String owner) {
-        documentRepository.deleteByIdAndOwner(id, owner);
+        if (documentExists(id, owner)) {
+            documentRepository.deleteByIdAndOwner(id, owner);
+        } else {
+            throw new DocumentNotFoundException();
+        }
     }
 
     private boolean documentAlreadyExists(String hash, String owner) {
         return documentRepository.existsByHashAndOwner(hash, owner);
+    }
+
+    private boolean documentExists(String id, String owner) {
+        return documentRepository.existsByIdAndOwner(id, owner);
     }
 
     private String hashText(String text) {

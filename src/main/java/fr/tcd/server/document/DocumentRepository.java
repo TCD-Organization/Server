@@ -10,5 +10,5 @@ public interface DocumentRepository extends MongoRepository<DocumentModel, Long>
     Optional<DocumentModel> findByIdAndOwner(String docID, String owner);
     List<DocumentModel> findByOwner(String owner);
     void deleteByIdAndOwner(String id, String owner);
-    //DocumentModel findById(String docId);
+    boolean existsByIdAndOwner(String docId, String owner);
 }

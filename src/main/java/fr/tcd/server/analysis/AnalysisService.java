@@ -8,6 +8,7 @@ import fr.tcd.server.analysis.exception.AnalysisAlreadyFinishedException;
 import fr.tcd.server.analysis.exception.AnalysisNotCreatedException;
 import fr.tcd.server.analysis.exception.AnalysisNotFoundException;
 import fr.tcd.server.analysis.exception.AnalysisNotUpdatedException;
+import fr.tcd.server.analysis.status.AnalysisStatus;
 import fr.tcd.server.document.DocumentModel;
 import fr.tcd.server.document.DocumentService;
 import org.springframework.stereotype.Service;
@@ -46,39 +47,15 @@ public class AnalysisService {
         return savedAnalysis;
     }
 
-    public AnalysisModel processAnalysisUpdate(AnalysisProgressionDTO analysisProgression, String analysisId, String runner) {
+    public AnalysisModel processAnalysisUpdate(String analysisId, AnalysisStatus status, String runner, int stepNumber,
+                                               int totalSteps, String stepName, Long lastingTime, String result) {
         AnalysisModel analysis = analysisRepository.findById(analysisId).orElseThrow(AnalysisNotFoundException::new);
-        AnalysisModel updatedAnalysis = updateAnalysis(analysis, analysisProgression, runner);
-        AnalysisModel savedAnalysis = Optional.ofNullable(analysisRepository.save(updatedAnalysis)).orElseThrow(AnalysisNotUpdatedException::new);
+        analysis.updateProgress(status, runner, stepNumber, totalSteps, stepName, lastingTime, result);
+        AnalysisModel savedAnalysis = Optional.ofNullable(analysisRepository.save(analysis)).orElseThrow(AnalysisNotUpdatedException::new);
         frontAnalysisService.createQueueAndSendAnalysis(savedAnalysis);
         return analysis;
     }
 
-    private AnalysisModel updateAnalysis(AnalysisModel analysis, AnalysisProgressionDTO analysisProgression, String runner) {
-        if (analysis.getStatus() == FINISHED) {
-            throw new AnalysisAlreadyFinishedException();
-        }
-
-        if (analysis.getStatus() == TO_START) {
-            analysis.setStart_time(new Date());
-        }
-
-        analysis.setStatus(analysisProgression.getStatus());
-        analysis.setRunner(runner);
-        analysis.setStep_number(analysisProgression.getStep_number());
-        analysis.setTotal_steps(analysisProgression.getTotal_steps());
-        analysis.setStep_name(analysisProgression.getStep_name());
-        analysis.setLasting_time(analysisProgression.getLasting_time());
-
-        if (analysisProgression.getStatus() == FINISHED) {
-            analysis.setStep_number(analysisProgression.getTotal_steps());
-            analysis.setEnd_time(new Date());
-            analysis.setLasting_time(0L);
-            analysis.setResult(analysisProgression.getResult());
-        }
-
-        return analysis;
-    }
 
     public List<AnalysisModel> getMyAnalyses(String owner) {
         return analysisRepository.findByOwner(owner);
@@ -88,7 +65,16 @@ public class AnalysisService {
         return analysisRepository.findByIdAndOwner(id, owner).orElseThrow(AnalysisNotFoundException::new);
     }
 
+    public boolean analysisExists(String id, String owner) {
+        return analysisRepository.existsByIdAndOwner(id, owner);
+    }
+
     public void deleteAnalysis(String id, String owner) {
-        analysisRepository.deleteByIdAndOwner(id, owner);
+        if (analysisExists(id, owner)) {
+            analysisRepository.deleteByIdAndOwner(id, owner);
+        } else {
+            throw new AnalysisNotFoundException();
+        }
+
     }
 }
