@@ -30,7 +30,8 @@ public class DocumentService {
         this.documentRepository = documentRepository;
     }
 
-    public DocumentModel createDocument(String name, String genre, String content , String owner) {
+    public DocumentModel createDocument(String name, String genre, String content, String owner) {
+        content = cleanContent(content);
         String hash = hashText(content);
         if (documentAlreadyExists(hash, owner)) {
             throw new DocumentAlreadyExistsException();
@@ -44,6 +45,14 @@ public class DocumentService {
                 .setOwner(owner);
 
         return Optional.of(documentRepository.save(documentModel)).orElseThrow(DocumentNotCreatedException::new);
+    }
+
+    private String cleanContent(String content) {
+        return content.trim()
+                .replaceAll(" +", " ")
+                .replaceAll("\\n", "")
+                .replaceAll("\\t", "")
+                .replaceAll("\\r", "");
     }
 
     public String getDocumentContent(String content, DocumentContentType contentType, @Nullable MultipartFile mpFile) {
