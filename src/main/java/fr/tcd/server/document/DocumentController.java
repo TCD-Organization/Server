@@ -24,17 +24,18 @@ public class DocumentController {
     public ResponseEntity<String> createDocument(
             @RequestParam("name") @NotEmpty String name,
             @RequestParam("genre") @NotEmpty String genre,
-            @RequestParam("content_type") @NotEmpty String content_type,
+            @RequestParam("content_type") @NotEmpty DocumentContentType content_type,
             @RequestParam("content") @NotEmpty String content,
             @RequestParam(name = "file", required = false) MultipartFile mpFile,
             Principal principal, UriComponentsBuilder uriBuilder)
     {
         DocumentDTO documentDTO = new DocumentDTO(name, genre, content_type, content);
 
-        content = documentService.getDocumentContent(documentDTO, mpFile);
+        content = documentService.getDocumentContent(documentDTO.getContent(), documentDTO.getContent_type(), mpFile);
         documentDTO.setContent(content);
 
-        String newDocumentId = documentService.createDocument(documentDTO, principal.getName()).getId();
+        String newDocumentId = documentService.createDocument(documentDTO.getName(), documentDTO.getGenre(),
+                documentDTO.getContent(), principal.getName()).getId();
         URI location = uriBuilder.path("/document/{docId}").build(newDocumentId);
 
         return ResponseEntity.created(location).body(newDocumentId);
