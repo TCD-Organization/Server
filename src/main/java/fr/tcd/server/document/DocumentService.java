@@ -49,10 +49,10 @@ public class DocumentService {
 
     private String cleanContent(String content) {
         return content.trim()
-                .replaceAll(" +", " ")
+                .replaceAll("\\r", "")
                 .replaceAll("\\n", "")
                 .replaceAll("\\t", "")
-                .replaceAll("\\r", "");
+                .replaceAll(" +", " ");
     }
 
     public String getDocumentContent(String content, DocumentContentType contentType, @Nullable MultipartFile mpFile) {
