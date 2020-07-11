@@ -71,6 +71,7 @@ public class AnalysisService {
         AnalysisModel analysis = analysisRepository.findById(analysisId).orElseThrow(AnalysisNotFoundException::new);
         analysis.cancel();
         analysisRepository.save(analysis);
+        frontAnalysisService.createQueueAndSendAnalysis(analysis);
     }
 
     public void cancelAllAnalysesOfRunner(String runnerId) {
