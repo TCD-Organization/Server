@@ -1,5 +1,6 @@
 package fr.tcd.server.runner.scan;
 
+import fr.tcd.server.analysis.AnalysisService;
 import fr.tcd.server.runner.RunnerModel;
 import fr.tcd.server.runner.RunnerRepository;
 import fr.tcd.server.runner.status.RunnerStatus;
@@ -17,10 +18,12 @@ import java.util.List;
 public class ScheduledRunnerScanner {
     private final RunnerRepository runnerRepository;
     private final WebClientBean webClientBean;
+    private final AnalysisService analysisService;
 
-    public ScheduledRunnerScanner(RunnerRepository runnerRepository, WebClientBean webClientBean) {
+    public ScheduledRunnerScanner(RunnerRepository runnerRepository, WebClientBean webClientBean, AnalysisService analysisService) {
         this.runnerRepository = runnerRepository;
         this.webClientBean = webClientBean;
+        this.analysisService = analysisService;
     }
 
     @Async
@@ -35,7 +38,7 @@ public class ScheduledRunnerScanner {
         ResponseEntity<String> response = webClientBean.sendGetRequest(url);
         if(!response.getStatusCode().equals(HttpStatus.OK)) {
             runner.status(RunnerStatus.DOWN);
-            // TODO: Stop all analyses by this runner
+            analysisService.cancelAllAnalysesOfRunner(runner.getId());
             runnerRepository.save(runner);
         }
     }
