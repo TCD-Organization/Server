@@ -14,8 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-import static fr.tcd.server.analysis.status.AnalysisStatus.FINISHED;
-import static fr.tcd.server.analysis.status.AnalysisStatus.TO_START;
+import static fr.tcd.server.analysis.status.AnalysisStatus.*;
 
 @Document(collection="Analysis")
 @Data
@@ -72,13 +71,14 @@ public class AnalysisModel {
             this.lasting_time = 0L;
             this.result = result;
         }
+
+        if (status == CANCELED) {
+            this.end_time = new Date();
+            this.lasting_time = 0L;
+        }
     }
 
     private void updateIsValid(AnalysisStatus status, int stepNumber, int totalSteps, String result) {
-        if ((result == null || result.isEmpty()) && status == FINISHED) {
-            throw new AnalysisProgressionFieldsInvalidException("Cannot have status FINISHED and result empty");
-        }
-
         if(stepNumber <= this.step_number) {
             throw new AnalysisProgressionFieldsInvalidException("stepNumber cannot be same or lower than previous step number");
         }
@@ -86,5 +86,11 @@ public class AnalysisModel {
         if (stepNumber == totalSteps && status != FINISHED) {
             throw new AnalysisProgressionFieldsInvalidException("StepNumber cannot equal totalSteps when status is not FINISHED");
         }
+    }
+
+    public void cancel() {
+        this.status = CANCELED;
+        this.end_time = new Date();
+        this.lasting_time = 0L;
     }
 }

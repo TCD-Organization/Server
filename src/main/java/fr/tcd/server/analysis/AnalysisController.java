@@ -60,6 +60,11 @@ public class AnalysisController {
         return ResponseEntity.ok(analysis.getId());
     }
 
+    @PutMapping("/{analysisId}/cancel")
+    public ResponseEntity<String> updateAnalysisProgression(@PathVariable("analysisId") String analysisId) {
+        analysisService.cancelAnalysis(analysisId);
+        return ResponseEntity.ok(analysisId);
+    }
     // ============== NON-API ==============
 
 }
